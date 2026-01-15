@@ -17,6 +17,10 @@
     <!-- Markdown Parser -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+    <!-- CONFIGURATION FILE (API KEY) -->
+    <!-- Bu fayl config.js dan API kalitni yuklaydi -->
+    <script src="config.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -65,11 +69,13 @@
         .sidebar { transition: transform 0.3s ease-in-out; }
         #toast { visibility: hidden; opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
         #toast.show { visibility: visible; opacity: 1; bottom: 80px; }
+        
+        .filter-chip { white-space: nowrap; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
 
-    <!-- DATA SCRIPT (FULL DATABASE 1000+ WORDS) -->
+    <!-- DATA SCRIPT (FULL DATABASE) -->
     <script>
         function generateData() {
             const data = {};
@@ -77,7 +83,7 @@
             // --- UNIT 3: Fun and Games ---
             data[3] = { title: "Fun and Games", data: [
                 {en:"beat", uz:"yengmoq", cat:"Topic Vocabulary"}, {en:"board game", uz:"stol o'yini", cat:"Topic Vocabulary"},
-                {en:"captain", uz:"sardor (kapitan)", cat:"Topic Vocabulary"}, {en:"challenge", uz:"chaqiruv (musobaqaga)", cat:"Topic Vocabulary"},
+                {en:"captain", uz:"sardor (kapitan)", cat:"Topic Vocabulary"}, {en:"challenge", uz:"chorlov (musobaqaga)", cat:"Topic Vocabulary"},
                 {en:"champion", uz:"chempion", cat:"Topic Vocabulary"}, {en:"cheat", uz:"g'irromlik qilmoq", cat:"Topic Vocabulary"},
                 {en:"classical music", uz:"mumtoz musiqa", cat:"Topic Vocabulary"}, {en:"club", uz:"klub", cat:"Topic Vocabulary"},
                 {en:"coach", uz:"murabbiy", cat:"Topic Vocabulary"}, {en:"competition", uz:"musobaqa", cat:"Topic Vocabulary"},
@@ -509,7 +515,7 @@
                 {en:"ancient", uz:"qadimiy", cat:"Topic Vocabulary"}, {en:"checked", uz:"katakli", cat:"Topic Vocabulary"},
                 {en:"cotton", uz:"paxta", cat:"Topic Vocabulary"}, {en:"create", uz:"yaratmoq", cat:"Topic Vocabulary"},
                 {en:"design", uz:"dizayn", cat:"Topic Vocabulary"}, {en:"fix", uz:"tuzatmoq", cat:"Topic Vocabulary"},
-                {en:"fold", uz:"buklamoq", cat:"Topic Vocabulary"}, {en:"gallery", uz:"galeriya", cat:"Topic Vocabulary"},
+                {en:"fold", uz:"buklamoq", cat:"Topic Vocabulary"}, {en:"gallery", uz:"galereya", cat:"Topic Vocabulary"},
                 {en:"improvement", uz:"rivojlanish", cat:"Topic Vocabulary"}, {en:"loose", uz:"keng", cat:"Topic Vocabulary"},
                 {en:"maintain", uz:"ta'mirlamoq", cat:"Topic Vocabulary"}, {en:"match", uz:"moslashtirmoq", cat:"Topic Vocabulary"},
                 {en:"material", uz:"material", cat:"Topic Vocabulary"}, {en:"notice", uz:"payqamoq", cat:"Topic Vocabulary"},
@@ -818,8 +824,12 @@
 
     <script>
         // --- CONFIG & STATE ---
-        const HARDCODED_API_KEY = "AIzaSyDkTeVafJvVhGaXd9JuBWOPsqzIgZCpMg4"; 
-        let userApiKey = HARDCODED_API_KEY;
+        let userApiKey = "";
+        if (typeof CONFIG !== 'undefined') {
+            userApiKey = CONFIG.API_KEY;
+        } else {
+            console.warn("config.js fayli topilmadi yoki yuklanmadi.");
+        }
         
         const state = {
             currentUnitId: null, currentTab: 'list', currentFilter: 'all',
@@ -896,15 +906,8 @@
             document.getElementById('filterContainer').classList.remove('hidden');
             document.getElementById('welcomeScreen').classList.add('hidden');
             
-            document.querySelectorAll('.filter-chip').forEach(el => {
-                const isAll = el.innerText === 'All';
-                el.classList.toggle('bg-blue-100', isAll);
-                el.classList.toggle('text-blue-700', isAll);
-                el.classList.toggle('border-blue-200', isAll);
-                el.classList.toggle('bg-gray-100', !isAll);
-                el.classList.toggle('text-gray-600', !isAll);
-                el.classList.toggle('border-gray-200', !isAll);
-            });
+            // Reset chips to 'All'
+            filterWords('all');
 
             if(window.innerWidth < 768) toggleSidebar();
             switchTab('list');
@@ -913,14 +916,33 @@
         function filterWords(cat) {
             state.currentFilter = cat;
             document.querySelectorAll('.filter-chip').forEach(el => {
-                const active = (cat === 'all' && el.innerText === 'All') || (cat !== 'all' && el.innerText.includes(cat.split(' ')[0]));
-                el.classList.toggle('bg-blue-100', active);
-                el.classList.toggle('text-blue-700', active);
-                el.classList.toggle('border-blue-200', active);
-                el.classList.toggle('bg-gray-100', !active);
-                el.classList.toggle('text-gray-600', !active);
-                el.classList.toggle('border-gray-200', !active);
+                // If cat is 'all', check if button text is 'All'. 
+                // Otherwise check if data-cat attribute matches exactly OR text content implies match.
+                // Best to rely on exact match if we had data attributes, but based on innerText logic:
+                let isActive = false;
+                if (cat === 'all') {
+                    if (el.innerText === 'All') isActive = true;
+                } else {
+                    // Check if button text roughly matches category start
+                    // e.g. "Topic Vocabulary" matches "Topic Vocab"
+                    // "Prepositional Phrases" matches "Prep. Phrases" (needs special case or data attribute)
+                    // Let's add simple mapping or check.
+                    if (el.innerText === 'All') isActive = false;
+                    else if (cat === 'Topic Vocabulary' && el.innerText.includes('Topic')) isActive = true;
+                    else if (cat === 'Phrasal Verbs' && el.innerText.includes('Phrasal')) isActive = true;
+                    else if (cat === 'Word Formation' && el.innerText.includes('Formation')) isActive = true;
+                    else if (cat === 'Prepositional Phrases' && el.innerText.includes('Prep')) isActive = true;
+                    else if (cat === 'Word Patterns' && el.innerText.includes('Patterns')) isActive = true;
+                }
+
+                el.classList.toggle('bg-blue-100', isActive);
+                el.classList.toggle('text-blue-700', isActive);
+                el.classList.toggle('border-blue-200', isActive);
+                el.classList.toggle('bg-gray-100', !isActive);
+                el.classList.toggle('text-gray-600', !isActive);
+                el.classList.toggle('border-gray-200', !isActive);
             });
+            
             if(state.currentTab === 'list') renderList();
             if(state.currentTab === 'flashcards') initFlashcards();
         }
