@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Destination B1 Full Vocabulary</title>
     
-    <!-- ERROR HANDLER -->
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            // Agar xatolik bo'lsa, loadingni olib tashlash kerak, shunda xato ko'rinadi
-            const loader = document.getElementById('app-loading');
-            if(loader) loader.style.display = 'none';
-            
-            console.error("Global Error:", msg, "Line:", line);
-            // Xatolikni ekranga chiqarish (ixtiyoriy, debug uchun)
-            // alert("Xatolik: " + msg); 
-            return false; 
-        };
-    </script>
-
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -31,7 +17,8 @@
     <!-- Markdown Parser -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- CONFIGURATION FILE (API KEYS) -->
+    <!-- CONFIGURATION FILE (API KEY) -->
+    <!-- Bu fayl config.js dan API kalitni yuklaydi -->
     <script src="config.js"></script>
 
     <style>
@@ -83,45 +70,10 @@
         #toast { visibility: hidden; opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
         #toast.show { visibility: visible; opacity: 1; bottom: 80px; }
         
-        .filter-chip { white-space: nowrap; flex-shrink: 0; }
-        
-        /* AI Chat Bubble Styles */
-        .ai-message {
-            background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
-            padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 14px;
-            align-self: flex-start; max-width: 85%;
-        }
-        .dark .ai-message {
-            background: #14532d; border-color: #16a34a; color: #dcfce7;
-        }
-        .user-message {
-            background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;
-            padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 14px;
-            align-self: flex-end; max-width: 85%;
-        }
-        .dark .user-message {
-            background: #1e3a8a; border-color: #2563eb; color: #dbeafe;
-        }
-
-        /* Loading Overlay */
-        #app-loading {
-            position: fixed; inset: 0; background: white; z-index: 9999;
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
-            transition: opacity 0.5s ease;
-        }
-        .dark #app-loading { background: #111827; color: white; }
+        .filter-chip { white-space: nowrap; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
-
-    <!-- LOADING SCREEN -->
-    <div id="app-loading">
-        <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-        <p class="text-gray-500 font-medium">Yuklanmoqda...</p>
-    </div>
-
-    <!-- ERROR DISPLAY (For Debugging on Mobile) -->
-    <div id="error-display" class="hidden fixed top-0 left-0 w-full bg-red-600 text-white p-4 z-[10000] text-xs font-mono break-all"></div>
 
     <!-- DATA SCRIPT (FULL DATABASE) -->
     <script>
@@ -534,7 +486,7 @@
                 {en:"suffer", uz:"azob chekmoq", cat:"Topic Vocabulary"}, {en:"taste", uz:"ta'm", cat:"Topic Vocabulary"},
                 {en:"treatment", uz:"davolash", cat:"Topic Vocabulary"}, {en:"vitamin", uz:"vitamin", cat:"Topic Vocabulary"},
                 {en:"cut down (on)", uz:"kamaytirmoq", cat:"Phrasal Verbs"}, {en:"fall down", uz:"yiqilmoq", cat:"Phrasal Verbs"},
-                {en:"get over", uz:"dan tuzalib ketmoq", cat:"Phrasal Verbs"}, {en:"go off", uz:"aynimoq (ovqat)", cat:"Phrasal Verbs"},
+                {en:"get over", uz:"dan tuzalmoq", cat:"Phrasal Verbs"}, {en:"go off", uz:"aynimoq", cat:"Phrasal Verbs"},
                 {en:"lie down", uz:"yotmoq", cat:"Phrasal Verbs"}, {en:"put on", uz:"semirmoq", cat:"Phrasal Verbs"},
                 {en:"sit down", uz:"o'tirmoq", cat:"Phrasal Verbs"}, {en:"stand up", uz:"o'rnidan turmoq", cat:"Phrasal Verbs"},
                 {en:"at night", uz:"tunda", cat:"Prepositional Phrases"}, {en:"at risk", uz:"xavf ostida", cat:"Prepositional Phrases"},
@@ -735,25 +687,154 @@
             return data;
         }
         const database = generateData();
+    </script>
 
-        // Safe WebApp Initialization
-        let tg;
-        try {
-            tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-        } catch (e) {
-            console.warn("Telegram WebApp not detected");
-        }
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl transform -translate-x-full md:translate-x-0 md:relative md:shadow-none flex flex-col border-r dark:border-gray-700">
+        <div class="p-4 bg-blue-600 text-white flex justify-between items-center shadow-md z-10">
+            <h1 class="text-xl font-bold tracking-tight"><i class="fas fa-book-open mr-2"></i>Destination B1</h1>
+        </div>
+        
+        <div class="p-3 bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700">
+            <!-- Search removed from here as per request -->
+        </div>
 
+        <div id="unitList" class="flex-1 overflow-y-auto no-scrollbar p-2 space-y-1"></div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden backdrop-blur-sm" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN -->
+    <main class="flex-1 flex flex-col h-full relative w-full overflow-hidden">
+        
+        <header class="glass-header h-14 flex items-center justify-between px-4 sticky top-0 z-30 shrink-0">
+            <div class="flex items-center">
+                <button onclick="toggleSidebar()" class="md:hidden mr-3 text-gray-600 dark:text-gray-300 p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="flex flex-col justify-center">
+                    <h2 id="currentUnitTitle" class="font-bold text-sm sm:text-lg truncate max-w-[200px] dark:text-white leading-tight">Select a Unit</h2>
+                    <p id="wordCount" class="text-[10px] text-gray-500 dark:text-gray-400 hidden">0 so'z</p>
+                </div>
+            </div>
+            <!-- Search bar moved here -->
+        </header>
+        
+        <!-- MAIN SEARCH BAR -->
+        <div class="px-4 py-2 bg-white dark:bg-gray-900 border-b dark:border-gray-700 shrink-0">
+             <div class="relative">
+                <input type="text" id="globalSearch" placeholder="Qidirish..." class="w-full pl-9 pr-3 py-2 rounded-lg text-sm border focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-400 transition-all shadow-sm">
+                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div id="filterContainer" class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar whitespace-nowrap bg-white dark:bg-gray-800 border-b dark:border-gray-700 hidden shrink-0">
+            <button onclick="filterWords('all')" class="filter-chip active px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200 transition">All</button>
+            <button onclick="filterWords('Topic Vocabulary')" class="filter-chip px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 transition">Topic Vocab</button>
+            <button onclick="filterWords('Phrasal Verbs')" class="filter-chip px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 transition">Phrasal Verbs</button>
+            <button onclick="filterWords('Prepositional Phrases')" class="filter-chip px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 transition">Prep Phrases</button>
+            <button onclick="filterWords('Word Formation')" class="filter-chip px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 transition">Formation</button>
+            <button onclick="filterWords('Word Patterns')" class="filter-chip px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 transition">Patterns</button>
+        </div>
+
+        <div id="contentArea" class="flex-1 overflow-y-auto p-4 pb-24 relative">
+            
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                <div class="bg-blue-50 dark:bg-gray-800 p-6 rounded-full mb-4">
+                    <i class="fas fa-book-reader text-5xl text-blue-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200">Xush kelibsiz!</h3>
+                <p class="text-sm">Boshlash uchun chap menyudan Unit tanlang.</p>
+            </div>
+
+            <div id="listView" class="hidden space-y-3 pb-10"></div>
+
+            <div id="flashcardsView" class="hidden h-full flex flex-col items-center justify-center p-2"></div>
+
+            <div id="matchView" class="hidden h-full">
+                <div id="matchGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 h-full content-start"></div>
+                <div id="matchSuccess" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white/95 dark:bg-gray-900/95 z-20 backdrop-blur-sm">
+                    <i class="fas fa-trophy text-6xl text-yellow-400 mb-4 animate-bounce"></i>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">Qoyil!</h3>
+                    <p class="text-gray-500 mb-6">Barcha juftliklar topildi.</p>
+                    <button onclick="initMatchGame()" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-lg active:scale-95 font-medium">Qayta o'ynash</button>
+                </div>
+            </div>
+
+            <div id="quizView" class="hidden h-full flex flex-col max-w-md mx-auto pt-4">
+                <div class="flex-1 flex flex-col items-center">
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-8 dark:bg-gray-700">
+                        <div id="quizProgress" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <span class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">Translate to English</span>
+                    <h2 id="quizQuestion" class="text-2xl sm:text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white px-2">...</h2>
+                    <div class="w-full relative">
+                        <input type="text" id="quizInput" placeholder="Javobni yozing..." autocomplete="off" class="w-full text-center text-xl p-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-all text-gray-900 dark:text-white bg-white dark:bg-gray-800">
+                        <div id="quizFeedback" class="mt-3 text-center h-6 font-bold text-sm"></div>
+                    </div>
+                    <div class="flex gap-3 mt-6 w-full">
+                        <button onclick="useHint()" class="flex-1 py-3 bg-yellow-50 text-yellow-700 rounded-xl font-medium border border-yellow-200 hover:bg-yellow-100 transition"><i class="fas fa-lightbulb mr-1"></i> Hint</button>
+                        <button onclick="checkQuizAnswer()" class="flex-[2] py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition">Tekshirish</button>
+                    </div>
+                </div>
+                <div id="quizResult" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-gray-900 z-20">
+                    <div class="text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+                        <h3 class="text-gray-500 uppercase text-xs font-bold mb-2">Natija</h3>
+                        <div class="text-6xl font-bold text-blue-600 mb-4" id="quizScoreDisplay">0/0</div>
+                        <button onclick="initQuiz()" class="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition">Qayta ishlash</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchView" class="hidden space-y-3">
+                <h3 class="font-bold text-gray-500 mb-2 text-sm uppercase">Qidiruv Natijalari:</h3>
+                <div id="searchResultsList" class="space-y-2"></div>
+            </div>
+
+        </div>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 px-6 py-2 flex justify-between items-center z-40 md:pl-64 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <button onclick="switchTab('list')" class="nav-btn active flex flex-col items-center text-gray-400 hover:text-blue-600 transition" data-tab="list">
+                <i class="fas fa-list text-xl mb-1"></i><span class="text-[10px] font-medium">Lug'at</span>
+            </button>
+            <button onclick="switchTab('flashcards')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600 transition" data-tab="flashcards">
+                <i class="fas fa-layer-group text-xl mb-1"></i><span class="text-[10px] font-medium">Cards</span>
+            </button>
+            <button onclick="switchTab('match')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600 transition" data-tab="match">
+                <i class="fas fa-puzzle-piece text-xl mb-1"></i><span class="text-[10px] font-medium">Match</span>
+            </button>
+            <button onclick="switchTab('quiz')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600 transition" data-tab="quiz">
+                <i class="fas fa-pen-fancy text-xl mb-1"></i><span class="text-[10px] font-medium">Quiz</span>
+            </button>
+        </nav>
+    </main>
+
+    <!-- AI RESULT MODAL -->
+    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh] animate-slide-up">
+            <div class="p-4 border-b dark:border-gray-700 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg"><i class="fas fa-robot mr-2"></i>Gemini AI</h3>
+                <button onclick="closeAiModal()" class="hover:bg-white/20 p-1 rounded transition"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6" id="aiModalBody">
+                <div id="aiModalContent" class="text-gray-700 dark:text-gray-300 leading-relaxed text-md min-h-[100px]"></div>
+            </div>
+            <!-- Story Audio Controls -->
+            <div id="aiAudioControls" class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30 hidden flex justify-center">
+                <button id="playStoryBtn" class="px-5 py-2 bg-blue-600 text-white rounded-full shadow-md flex items-center gap-2 hover:bg-blue-700 transition active:scale-95">
+                    <i class="fas fa-volume-up"></i> <span>Hikoyani tinglash</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-800/90 backdrop-blur text-white px-6 py-3 rounded-full text-sm font-medium shadow-xl z-50 text-center min-w-[200px]">Notification</div>
+
+    <script>
         // --- CONFIG & STATE ---
-        let apiKeys = [];
-        let currentKeyIndex = 0;
-
+        let userApiKey = "";
         if (typeof CONFIG !== 'undefined') {
-            if (CONFIG.API_KEYS && CONFIG.API_KEYS.length > 0) {
-                apiKeys = CONFIG.API_KEYS;
-            } else if (CONFIG.API_KEY) {
-                apiKeys = [CONFIG.API_KEY];
-            }
+            userApiKey = CONFIG.API_KEY;
         } else {
             console.warn("config.js fayli topilmadi yoki yuklanmadi.");
         }
@@ -763,66 +844,29 @@
             words: [], flashcardIndex: 0,
             matchGame: { selected: null, matchesFound: 0, pairs: [] },
             quiz: { questions: [], currentIndex: 0, score: 0, hintsUsed: 0 },
-            currentStoryText: "",
-            practiceWord: null,
-            chatHistory: [] // New chat history
+            currentStoryText: "" // Store generated story text for audio
         };
 
-        // --- SAFE INITIALIZATION WRAPPER ---
-        function initApp() {
-            if (tg) {
-                tg.ready(); 
-                tg.expand();
-                if (tg.colorScheme === 'dark') document.documentElement.classList.add('dark');
-            }
+        const tg = window.Telegram.WebApp;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            tg.ready(); tg.expand();
+            if (tg.colorScheme === 'dark') document.documentElement.classList.add('dark');
             renderSidebar();
-            
-            const searchInput = document.getElementById('globalSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => handleGlobalSearch(e.target.value));
-            }
-
-            const quizInput = document.getElementById('quizInput');
-            if (quizInput) {
-                quizInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkQuizAnswer(); });
-            }
-
-            // Chat input listener
-            const chatInput = document.getElementById('aiChatInput');
-            if (chatInput) {
-                chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
-            }
-            
-            // HIDE LOADING SCREEN
-            const loader = document.getElementById('app-loading');
-            if(loader) {
-                setTimeout(() => {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 500);
-                }, 500);
-            }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
+            document.getElementById('globalSearch').addEventListener('input', (e) => handleGlobalSearch(e.target.value));
+            document.getElementById('quizInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkQuizAnswer(); });
+        });
 
         // --- NAVIGATION ---
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            if(sidebar && overlay) {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-            }
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
 
         function renderSidebar() {
             const list = document.getElementById('unitList');
-            if (!list) return;
-            
             list.innerHTML = '';
             Object.keys(database).forEach(id => {
                 const btn = document.createElement('button');
@@ -845,44 +889,34 @@
                 if(active) b.classList.add('scale-105'); else b.classList.remove('scale-105');
             });
             
-            ['listView', 'flashcardsView', 'matchView', 'quizView', 'searchView', 'welcomeScreen'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.classList.add('hidden');
-            });
+            ['listView', 'flashcardsView', 'matchView', 'quizView', 'searchView', 'welcomeScreen'].forEach(id => document.getElementById(id).classList.add('hidden'));
 
             if (!state.currentUnitId && tab !== 'list') {
-                const welcome = document.getElementById('welcomeScreen');
-                if(welcome) welcome.classList.remove('hidden'); 
-                return;
+                document.getElementById('welcomeScreen').classList.remove('hidden'); return;
             }
 
             if (state.currentUnitId) {
-                const view = document.getElementById(tab + (tab==='flashcards'?'View':'View'));
-                if(view) view.classList.remove('hidden');
-                
+                document.getElementById(tab + (tab==='flashcards'?'View':'View')).classList.remove('hidden');
                 if(tab==='list') renderList();
                 if(tab==='flashcards') initFlashcards();
                 if(tab==='match') initMatchGame();
                 if(tab==='quiz') initQuiz();
             } else {
-                const welcome = document.getElementById('welcomeScreen');
-                if(welcome) welcome.classList.remove('hidden');
+                document.getElementById('welcomeScreen').classList.remove('hidden');
             }
         }
 
         function loadUnit(id) {
             state.currentUnitId = id; state.currentFilter = 'all';
-            const titleEl = document.getElementById('currentUnitTitle');
-            const countEl = document.getElementById('wordCount');
-            const filterEl = document.getElementById('filterContainer');
-            const welcomeEl = document.getElementById('welcomeScreen');
-
-            if(titleEl) titleEl.innerText = `Unit ${id}: ${database[id].title}`;
-            if(countEl) { countEl.innerText = `${database[id].data.length} so'z`; countEl.classList.remove('hidden'); }
-            if(filterEl) filterEl.classList.remove('hidden');
-            if(welcomeEl) welcomeEl.classList.add('hidden');
+            document.getElementById('currentUnitTitle').innerText = `Unit ${id}: ${database[id].title}`;
+            document.getElementById('wordCount').innerText = `${database[id].data.length} so'z`;
+            document.getElementById('wordCount').classList.remove('hidden');
+            document.getElementById('filterContainer').classList.remove('hidden');
+            document.getElementById('welcomeScreen').classList.add('hidden');
             
+            // Reset chips to 'All'
             filterWords('all');
+
             if(window.innerWidth < 768) toggleSidebar();
             switchTab('list');
         }
@@ -901,6 +935,7 @@
                     else if (cat === 'Prepositional Phrases' && el.innerText.includes('Prep')) isActive = true;
                     else if (cat === 'Word Patterns' && el.innerText.includes('Patterns')) isActive = true;
                 }
+
                 el.classList.toggle('bg-blue-100', isActive);
                 el.classList.toggle('text-blue-700', isActive);
                 el.classList.toggle('border-blue-200', isActive);
@@ -921,31 +956,22 @@
         // --- LIST VIEW ---
         function renderList() {
             const container = document.getElementById('listView');
-            if (!container) return;
             container.innerHTML = '';
-            
             const words = getFilteredWords();
-            
-            // AI FEATURES BUTTONS
-            const aiContainer = document.createElement('div');
-            aiContainer.className = "mb-4 flex gap-2 overflow-x-auto no-scrollbar";
-            if(apiKeys.length > 0) {
-                aiContainer.innerHTML = `
-                    <button onclick="generateStory()" class="flex-1 min-w-[140px] bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl shadow-lg font-bold hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center text-xs sm:text-sm">
-                        <i class="fas fa-book-open mr-2"></i>AI Hikoya
-                    </button>
-                    <button onclick="openAiChat()" class="flex-1 min-w-[140px] bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 rounded-xl shadow-lg font-bold hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center text-xs sm:text-sm">
-                        <i class="fas fa-comments mr-2"></i>AI Suhbat
-                    </button>
-                    <button onclick="openAiPractice()" class="flex-1 min-w-[140px] bg-gradient-to-r from-blue-500 to-cyan-600 text-white py-3 rounded-xl shadow-lg font-bold hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center text-xs sm:text-sm">
-                        <i class="fas fa-pen-nib mr-2"></i>Mashq
-                    </button>
-                `;
+
+            const aiBtn = document.createElement('div');
+            aiBtn.className = "mb-4";
+            if(userApiKey) {
+                aiBtn.innerHTML = `<button onclick="generateStory()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl shadow-lg font-bold hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center"><i class="fas fa-magic mr-2 animate-pulse"></i>AI Hikoya Yaratish</button>`;
             } 
-            container.appendChild(aiContainer);
+            container.appendChild(aiBtn);
 
             if(words.length === 0) {
-                container.innerHTML += `<div class="text-center text-gray-400 mt-10"><i class='fas fa-filter text-2xl mb-2'></i><br>Bu kategoriyada so'zlar topilmadi</div>`; return;
+                const empty = document.createElement('div');
+                empty.className = "text-center text-gray-400 mt-10 p-4 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl";
+                empty.innerHTML = "<i class='fas fa-filter text-2xl mb-2'></i><br>Bu kategoriyada so'zlar topilmadi";
+                container.appendChild(empty);
+                return;
             }
 
             words.forEach(w => {
@@ -961,7 +987,7 @@
                             <p class="text-gray-600 dark:text-gray-400 mt-0.5">${w.uz}</p>
                         </div>
                         <div class="flex gap-2">
-                            ${apiKeys.length > 0 ? `<button onclick="generateSentence('${w.en}', this)" class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-100 dark:hover:bg-gray-600 transition" title="AI Sentence"><i class="fas fa-wand-magic-sparkles"></i></button>` : ''}
+                            ${userApiKey ? `<button onclick="generateSentence('${w.en}', this)" class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-100 dark:hover:bg-gray-600 transition" title="AI Sentence"><i class="fas fa-wand-magic-sparkles"></i></button>` : ''}
                             <button onclick="playAudio('${w.en}')" class="w-10 h-10 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:bg-blue-100 dark:hover:bg-gray-600 transition"><i class="fas fa-volume-up"></i></button>
                         </div>
                     </div>
@@ -971,96 +997,27 @@
             });
         }
 
-        // --- NEW AI CHAT LOGIC ---
-        function openAiChat() {
-            if(!state.currentUnitId) { showToast("Avval birorta Unitni tanlang!"); return; }
-            state.chatHistory = []; // Reset history
-            document.getElementById('aiChatBody').innerHTML = '';
-            document.getElementById('aiChatInput').value = '';
-            document.getElementById('aiChatModal').classList.remove('hidden');
-            
-            // Start conversation
-            initAiChat();
-        }
-
-        async function initAiChat() {
-            addChatMessage('ai', '<i class="fas fa-spinner fa-spin"></i> O\'ylayapman...', true);
-            const unit = database[state.currentUnitId];
-            const words = unit.data.map(w => w.en).slice(0, 15).join(', '); // Use first 15 words for context
-            
-            const prompt = `You are a friendly English teacher. The student is learning "${unit.title}". Key vocabulary: ${words}. 
-            Start a short, engaging conversation with the student about this topic to help them practice. 
-            Ask ONE simple question to start. Keep your English simple (B1 level).`;
-
-            state.chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
-
-            try {
-                const text = await callGemini(prompt);
-                removeLoadingMessage();
-                if(text) {
-                    addChatMessage('ai', text);
-                    state.chatHistory.push({ role: 'model', parts: [{ text: text }] });
-                }
-            } catch (e) {
-                removeLoadingMessage();
-                showToast("AI xatosi");
-            }
-        }
-
-        async function sendChat() {
-            const input = document.getElementById('aiChatInput');
-            const msg = input.value.trim();
-            if(!msg) return;
-
-            addChatMessage('user', msg);
-            input.value = '';
-            addChatMessage('ai', '<i class="fas fa-spinner fa-spin"></i> ...', true);
-
-            const prompt = `User said: "${msg}". 
-            Reply to the user. If they made a grammar mistake, gently correct it inside parentheses (), then continue the conversation naturally. Keep it B1 level.`;
-
-            try {
-                const text = await callGemini(prompt);
-                removeLoadingMessage();
-                if(text) {
-                    addChatMessage('ai', text);
-                }
-            } catch(e) {
-                removeLoadingMessage();
-                showToast("Tarmoq xatosi");
-            }
-        }
-
-        function addChatMessage(sender, text, isLoading = false) {
-            const container = document.getElementById('aiChatBody');
-            const div = document.createElement('div');
-            div.className = sender === 'ai' ? 'ai-message' : 'user-message';
-            if (isLoading) div.id = 'chat-loading-msg';
-            div.innerHTML = marked.parse(text);
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function removeLoadingMessage() {
-            const loading = document.getElementById('chat-loading-msg');
-            if(loading) loading.remove();
-        }
-
-        // --- EXISTING FEATURES (Flashcards, Match, Quiz, Audio, Search) ---
-        // (Implementation is same as previous, ensured presence)
-        function initFlashcards() { 
-             const words = getFilteredWords();
+        // --- FLASHCARDS ---
+        function initFlashcards() {
+            const words = getFilteredWords();
             const container = document.getElementById('flashcardsView');
-            if (!container) return;
-            if (words.length === 0) { container.innerHTML = '<div class="text-center text-gray-400">So\'zlar yo\'q</div>'; return; }
-            state.words = words; state.flashcardIndex = 0;
+            
+            if (words.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400"><i class="fas fa-layer-group text-4xl mb-2"></i><br>So\'zlar yo\'q</div>'; return;
+            }
+
+            state.words = words;
+            state.flashcardIndex = 0;
+
             container.innerHTML = `
                 <div class="card-container w-full max-w-sm h-80 perspective-1000 cursor-pointer group" onclick="flipCard()">
                     <div id="flashcardInner" class="card-inner">
                         <div class="card-front border-2 border-gray-100 dark:border-gray-700">
                             <span class="text-xs font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest mb-4" id="fc-front-label">...</span>
                             <h3 class="text-4xl font-bold text-center mb-6 break-words w-full px-2" id="fc-front">...</h3>
-                            <button onclick="event.stopPropagation(); playAudio(state.words[state.flashcardIndex].en)" class="w-12 h-12 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:scale-110 transition shadow-sm"><i class="fas fa-volume-up text-xl"></i></button>
+                            <button onclick="event.stopPropagation(); playAudio(state.words[state.flashcardIndex].en)" class="w-12 h-12 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:scale-110 transition shadow-sm">
+                                <i class="fas fa-volume-up text-xl"></i>
+                            </button>
                             <p class="mt-auto text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1"><i class="fas fa-sync-alt"></i> Tarjima uchun bosing</p>
                         </div>
                         <div class="card-back shadow-blue-500/20">
@@ -1070,130 +1027,303 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="flex items-center gap-6 mt-8">
-                    <button onclick="prevCard()" class="w-14 h-14 rounded-full bg-white dark:bg-gray-800 shadow-lg text-gray-600 flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
-                    <span id="fc-counter" class="font-mono font-bold text-gray-500 bg-white dark:bg-gray-800 px-4 py-1 rounded-full shadow-sm">1 / ${words.length}</span>
-                    <button onclick="nextCard()" class="w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center"><i class="fas fa-arrow-right"></i></button>
-                </div>`;
+                    <button onclick="prevCard()" class="w-14 h-14 rounded-full bg-white dark:bg-gray-800 shadow-lg text-gray-600 dark:text-white flex items-center justify-center active:scale-95 hover:bg-gray-50 dark:hover:bg-gray-700 transition"><i class="fas fa-arrow-left text-lg"></i></button>
+                    <span id="fc-counter" class="font-mono font-bold text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-1 rounded-full shadow-sm">1 / ${words.length}</span>
+                    <button onclick="nextCard()" class="w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none flex items-center justify-center active:scale-95 hover:bg-blue-700 transition"><i class="fas fa-arrow-right text-lg"></i></button>
+                </div>
+            `;
             updateCardContent();
         }
+
         let currentCardMode = 'en-uz';
+
         function updateCardContent() {
             const w = state.words[state.flashcardIndex];
+            // Randomly decide direction for THIS card
             currentCardMode = Math.random() > 0.5 ? 'en-uz' : 'uz-en';
+
             const card = document.querySelector('.card-container');
-            if(card && card.classList.contains('flipped')) { card.classList.remove('flipped'); setTimeout(() => { setCardText(w); }, 300); } else { setCardText(w); }
+            if(card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                setTimeout(() => { setCardText(w); }, 300);
+            } else {
+                setCardText(w);
+            }
         }
+
         function setCardText(w) {
-            const frontLabel = document.getElementById('fc-front-label'); const backLabel = document.getElementById('fc-back-label');
-            const frontText = document.getElementById('fc-front'); const backText = document.getElementById('fc-back');
-            const catText = document.getElementById('fc-cat'); const counter = document.getElementById('fc-counter');
-            if(!frontText) return; // Safety check
+            const frontLabel = document.getElementById('fc-front-label');
+            const backLabel = document.getElementById('fc-back-label');
+            const frontText = document.getElementById('fc-front');
+            const backText = document.getElementById('fc-back');
+            const catText = document.getElementById('fc-cat');
+            const counter = document.getElementById('fc-counter');
+
+            if (currentCardMode === 'en-uz') {
+                frontLabel.innerText = "English";
+                backLabel.innerText = "O'zbekcha";
+                frontText.innerText = w.en;
+                backText.innerText = w.uz;
+            } else {
+                frontLabel.innerText = "O'zbekcha";
+                backLabel.innerText = "English";
+                frontText.innerText = w.uz;
+                backText.innerText = w.en;
+            }
             
-            if (currentCardMode === 'en-uz') { frontLabel.innerText = "English"; backLabel.innerText = "O'zbekcha"; frontText.innerText = w.en; backText.innerText = w.uz; } 
-            else { frontLabel.innerText = "O'zbekcha"; backLabel.innerText = "English"; frontText.innerText = w.uz; backText.innerText = w.en; }
-            catText.innerText = w.cat; counter.innerText = `${state.flashcardIndex + 1} / ${state.words.length}`;
+            catText.innerText = w.cat;
+            counter.innerText = `${state.flashcardIndex + 1} / ${state.words.length}`;
         }
-        function flipCard() { const c = document.querySelector('.card-container'); if(c) c.classList.toggle('flipped'); }
+
+        function flipCard() { document.querySelector('.card-container').classList.toggle('flipped'); }
         function nextCard() { if(state.flashcardIndex < state.words.length - 1) { state.flashcardIndex++; updateCardContent(); } else showToast("Bu oxirgi kartochka"); }
         function prevCard() { if(state.flashcardIndex > 0) { state.flashcardIndex--; updateCardContent(); } }
 
+        // --- MATCH GAME ---
         function initMatchGame() {
             const words = database[state.currentUnitId].data;
-            if(words.length < 3) { 
-                const grid = document.getElementById('matchGrid');
-                if(grid) grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">So\'zlar yetarli emas</div>'; 
-                return; 
+            if(words.length < 3) {
+                 document.getElementById('matchGrid').innerHTML = '<div class="col-span-3 text-center text-gray-400 mt-10">O\'yin uchun so\'zlar yetarli emas</div>'; return;
             }
             const count = Math.min(6, words.length);
             const shuffled = [...words].sort(()=>0.5-Math.random()).slice(0, count);
-            let tiles = []; shuffled.forEach((w,i) => { tiles.push({id:i, text:w.en, type:'en'}, {id:i, text:w.uz, type:'uz'}); });
+            let tiles = [];
+            shuffled.forEach((w,i) => { tiles.push({id:i, text:w.en, type:'en'}, {id:i, text:w.uz, type:'uz'}); });
             tiles.sort(()=>0.5-Math.random());
+            
             state.matchGame = { selected:null, matchesFound:0, pairs:tiles, totalPairs: count };
-            const grid = document.getElementById('matchGrid');
-            if(grid) {
-                 grid.innerHTML = ''; 
-                 document.getElementById('matchSuccess').classList.add('hidden');
-                 tiles.forEach((t, i) => {
-                    const btn = document.createElement('button');
-                    btn.className = "aspect-square flex items-center justify-center p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition select-none leading-tight break-words hover:border-blue-300 dark:text-gray-200";
-                    btn.innerText = t.text; btn.onclick = () => handleMatch(btn, t);
-                    grid.appendChild(btn);
-                });
-            }
+            document.getElementById('matchGrid').innerHTML = '';
+            document.getElementById('matchSuccess').classList.add('hidden');
+            
+            tiles.forEach((t, i) => {
+                const btn = document.createElement('button');
+                btn.className = "aspect-square flex items-center justify-center p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition select-none leading-tight break-words hover:border-blue-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-200";
+                btn.innerText = t.text;
+                btn.onclick = () => handleMatch(btn, t);
+                document.getElementById('matchGrid').appendChild(btn);
+            });
         }
+
         function handleMatch(btn, tile) {
             if(btn.classList.contains('matched') || btn.classList.contains('bg-blue-500')) return;
-            btn.classList.add('bg-blue-500', 'text-white', 'border-blue-600'); btn.classList.remove('bg-white', 'dark:bg-gray-800');
-            if(!state.matchGame.selected) { state.matchGame.selected = { btn, tile }; } else {
+            
+            btn.classList.add('bg-blue-500', 'text-white', 'border-blue-600', 'ring-2', 'ring-blue-200');
+            btn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-200');
+
+            if(!state.matchGame.selected) {
+                state.matchGame.selected = { btn, tile };
+            } else {
                 const prev = state.matchGame.selected;
                 if(prev.tile.id === tile.id && prev.tile.type !== tile.type) {
-                    setTimeout(() => { btn.classList.add('matched'); prev.btn.classList.add('matched'); state.matchGame.matchesFound++; if(state.matchGame.matchesFound === state.matchGame.totalPairs) document.getElementById('matchSuccess').classList.remove('hidden'); }, 300);
+                    setTimeout(() => {
+                        btn.classList.add('matched'); prev.btn.classList.add('matched');
+                        state.matchGame.matchesFound++;
+                        if(state.matchGame.matchesFound === state.matchGame.totalPairs) document.getElementById('matchSuccess').classList.remove('hidden');
+                    }, 300);
                 } else {
-                    setTimeout(() => { btn.classList.add('shake', 'bg-red-500'); prev.btn.classList.add('shake', 'bg-red-500'); btn.classList.remove('bg-blue-500'); prev.btn.classList.remove('bg-blue-500');
-                    setTimeout(() => { [btn, prev.btn].forEach(b => { b.className = "aspect-square flex items-center justify-center p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition select-none leading-tight break-words hover:border-blue-300 dark:text-gray-200"; }); }, 500); }, 300);
+                    setTimeout(() => {
+                        btn.classList.add('shake', 'bg-red-500', 'border-red-600'); prev.btn.classList.add('shake', 'bg-red-500', 'border-red-600');
+                        btn.classList.remove('bg-blue-500', 'border-blue-600'); prev.btn.classList.remove('bg-blue-500', 'border-blue-600');
+                        setTimeout(() => { [btn, prev.btn].forEach(b => { b.className = "aspect-square flex items-center justify-center p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition select-none leading-tight break-words hover:border-blue-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-200"; }); }, 500);
+                    }, 300);
                 }
                 state.matchGame.selected = null;
             }
         }
 
+        // --- QUIZ ---
         function initQuiz() {
             const words = database[state.currentUnitId].data;
-            state.quiz.questions = words.length < 4 ? [] : [...words].sort(()=>0.5-Math.random()).slice(0,10);
+             if(words.length < 4) state.quiz.questions = [];
+             else state.quiz.questions = [...words].sort(()=>0.5-Math.random()).slice(0,10);
             state.quiz.currentIndex = 0; state.quiz.score = 0;
-            const res = document.getElementById('quizResult');
-            if(res) res.classList.add('hidden'); 
+            document.getElementById('quizResult').classList.add('hidden');
             renderQuiz();
         }
+
         function renderQuiz() {
             if(state.quiz.questions.length === 0) { document.getElementById('quizQuestion').innerText = "Savollar yetarli emas"; return; }
-            if(state.quiz.currentIndex >= state.quiz.questions.length) { document.getElementById('quizResult').classList.remove('hidden'); document.getElementById('quizScoreDisplay').innerText = `${state.quiz.score}/${state.quiz.questions.length}`; return; }
-            const q = state.quiz.questions[state.quiz.currentIndex]; state.quiz.hintsUsed = 0;
+            if(state.quiz.currentIndex >= state.quiz.questions.length) {
+                document.getElementById('quizResult').classList.remove('hidden');
+                document.getElementById('quizScoreDisplay').innerText = `${state.quiz.score}/${state.quiz.questions.length}`;
+                return;
+            }
+            const q = state.quiz.questions[state.quiz.currentIndex];
+            state.quiz.hintsUsed = 0;
             document.getElementById('quizQuestion').innerText = q.uz;
-            const inp = document.getElementById('quizInput'); inp.value = ''; inp.className = "w-full text-center text-xl p-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-all text-gray-900 bg-white";
-            document.getElementById('quizFeedback').innerText = ''; document.getElementById('quizProgress').style.width = `${(state.quiz.currentIndex/state.quiz.questions.length)*100}%`;
+            const inp = document.getElementById('quizInput');
+            inp.value = ''; 
+            // Fixed class for visibility
+            inp.className = "w-full text-center text-xl p-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-all text-gray-900 bg-white";
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('quizProgress').style.width = `${(state.quiz.currentIndex / state.quiz.questions.length) * 100}%`;
         }
-        function checkQuizAnswer() {
-            const inp = document.getElementById('quizInput'); const correct = state.quiz.questions[state.quiz.currentIndex].en.toLowerCase().trim();
-            if(inp.value.trim().toLowerCase() === correct) { inp.classList.add('border-green-500', 'text-green-600'); state.quiz.score++; playAudio(correct); setTimeout(() => { state.quiz.currentIndex++; renderQuiz(); }, 1000); }
-            else { inp.classList.add('border-red-500', 'text-red-600', 'shake'); document.getElementById('quizFeedback').innerText = state.quiz.questions[state.quiz.currentIndex].en; setTimeout(() => { state.quiz.currentIndex++; renderQuiz(); }, 2500); }
-        }
-        function useHint() { const correct = state.quiz.questions[state.quiz.currentIndex].en; state.quiz.hintsUsed++; document.getElementById('quizInput').value = correct.substring(0, state.quiz.hintsUsed); document.getElementById('quizInput').focus(); }
 
+        function checkQuizAnswer() {
+            const inp = document.getElementById('quizInput');
+            const correct = state.quiz.questions[state.quiz.currentIndex].en.toLowerCase().trim();
+            if(inp.value.trim().toLowerCase() === correct) {
+                inp.classList.add('border-green-500', 'text-green-600', 'bg-green-50', 'dark:bg-green-900/20');
+                state.quiz.score++;
+                playAudio(correct);
+                setTimeout(() => { state.quiz.currentIndex++; renderQuiz(); }, 1000);
+            } else {
+                inp.classList.add('border-red-500', 'text-red-600', 'bg-red-50', 'dark:bg-red-900/20');
+                inp.classList.add('shake');
+                document.getElementById('quizFeedback').innerText = state.quiz.questions[state.quiz.currentIndex].en;
+                document.getElementById('quizFeedback').className = "mt-3 text-center h-6 font-bold text-sm text-red-500 animate-pulse";
+                setTimeout(() => { state.quiz.currentIndex++; renderQuiz(); }, 2500);
+            }
+        }
+
+        function useHint() {
+            const correct = state.quiz.questions[state.quiz.currentIndex].en;
+            state.quiz.hintsUsed++;
+            document.getElementById('quizInput').value = correct.substring(0, state.quiz.hintsUsed);
+            document.getElementById('quizInput').focus();
+        }
+
+        // --- TELEGRAM-OPTIMIZED AUDIO ---
         function playAudio(text) {
             if (!text) return;
+
+            // 1. Harakat: Youdao TTS (Sifatli va ishonchli)
+            // Google TTS ba'zida bloklaydi, shuning uchun Youdao ishlatamiz (type=2 -> US English)
             const audio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`);
+            
             const playPromise = audio.play();
-            if (playPromise !== undefined) { playPromise.catch(error => { tryGoogleFallback(text); }); }
+
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Online audio xatosi:", error);
+                    // 2. Harakat: Google TTS (Zaxira)
+                    tryGoogleFallback(text);
+                });
+            }
         }
+
         function tryGoogleFallback(text) {
              const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`);
              const playPromise = audio.play();
-             if (playPromise !== undefined) { playPromise.catch(error => { playNativeAudio(text); }); }
+             
+             if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Google audio xatosi:", error);
+                    // 3. Harakat: Native (Telefon ovozi)
+                    playNativeAudio(text);
+                });
+            }
         }
+
         function playNativeAudio(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const speak = () => { const u = new SpeechSynthesisUtterance(text); const v = window.speechSynthesis.getVoices().find(v => v.lang === 'en-US'); if(v) u.voice = v; u.lang='en-US'; window.speechSynthesis.speak(u); };
-                if (window.speechSynthesis.getVoices().length === 0) window.speechSynthesis.onvoiceschanged = speak; else speak();
-            } else showToast("Audio xatosi");
+                
+                const speak = () => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    const voices = window.speechSynthesis.getVoices();
+                    
+                    // Eng yaxshi native ovozni qidirish
+                    const preferredVoice = voices.find(v => v.name === "Google US English") || 
+                                           voices.find(v => v.name === "Google UK English Female") ||
+                                           voices.find(v => v.lang === 'en-US');
+                                           
+                    if (preferredVoice) u.voice = preferredVoice;
+                    u.lang = 'en-US'; 
+                    u.rate = 0.9; // Sal sekinroq, tushunarli bo'lishi uchun
+                    
+                    window.speechSynthesis.speak(u);
+                };
+
+                if (window.speechSynthesis.getVoices().length === 0) {
+                    window.speechSynthesis.onvoiceschanged = speak;
+                } else {
+                    speak();
+                }
+            } else {
+                showToast("Audio qurilmada qo'llab quvvatlanmaydi");
+            }
         }
 
+        // --- AI GENERATION ---
+        async function callGemini(prompt) {
+            if(!userApiKey) { showToast("Xatolik: API kalit kiritilmagan!"); return null; }
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${userApiKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                if(!res.ok) throw new Error("API Error");
+                const data = await res.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch(e) { console.error(e); showToast("Xatolik: API kalit noto'g'ri yoki internet yo'q"); return null; }
+        }
+
+        async function generateSentence(word, btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            const row = btn.closest('.word-row');
+            let resDiv = row.querySelector('.ai-result');
+            const text = await callGemini(`Write 1 simple, educational sentence (B1 level) using the word '${word}'. Do not translate.`);
+            if(text) {
+                resDiv.innerHTML = `<span class="font-bold text-indigo-600 dark:text-indigo-400">Example:</span> ${text}`;
+                resDiv.classList.remove('hidden');
+            }
+            btn.innerHTML = original;
+            btn.disabled = false;
+        }
+
+        async function generateStory() {
+            const modal = document.getElementById('aiModal');
+            document.getElementById('aiModalContent').innerHTML = `<div class="flex flex-col items-center justify-center py-10"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div><p class="text-gray-500 font-medium">Qiziqarli hikoya yozilmoqda...</p></div>`;
+            document.getElementById('aiAudioControls').classList.add('hidden'); // Hide audio button initially
+            modal.classList.remove('hidden');
+            
+            const words = getFilteredWords().sort(()=>0.5-Math.random()).slice(0,5).map(w=>w.en);
+            if(words.length < 3) { document.getElementById('aiModalContent').innerHTML = "<p class='text-center text-red-500'>Hikoya uchun so'zlar yetarli emas.</p>"; return; }
+            
+            const text = await callGemini(`Write a funny, short story (max 50 words) using these words: ${words.join(', ')}. Mark the used words in bold (**word**). Keep it B1 level English.`);
+            
+            if(text) {
+                // Remove markdown bolding for audio reading (clean text)
+                const cleanText = text.replace(/\*\*/g, '');
+                state.currentStoryText = cleanText;
+                
+                document.getElementById('aiModalContent').innerHTML = marked.parse(text);
+                document.getElementById('aiAudioControls').classList.remove('hidden');
+                
+                // Attach click handler to play button
+                const playBtn = document.getElementById('playStoryBtn');
+                playBtn.onclick = () => playAudio(state.currentStoryText);
+                
+            } else {
+                closeAiModal();
+            }
+        }
+
+        function closeAiModal() { document.getElementById('aiModal').classList.add('hidden'); }
+
+        // --- GLOBAL SEARCH ---
         function handleGlobalSearch(q) {
             q = q.toLowerCase();
-            const list = document.getElementById('searchResultsList'); const view = document.getElementById('searchView');
-            if(!list || !view) return; // Safety check
-            
+            const list = document.getElementById('searchResultsList');
+            const view = document.getElementById('searchView');
             if(q.length < 2) { view.classList.add('hidden'); if(!state.currentUnitId) document.getElementById('welcomeScreen').classList.remove('hidden'); return; }
-            document.querySelectorAll('#contentArea > div').forEach(d => d.classList.add('hidden')); view.classList.remove('hidden'); list.innerHTML = '';
+            document.querySelectorAll('#contentArea > div').forEach(d => d.classList.add('hidden'));
+            view.classList.remove('hidden');
+            list.innerHTML = '';
             let count = 0;
             for(const [uid, unit] of Object.entries(database)) {
                 unit.data.forEach(w => {
                     if(w.en.toLowerCase().includes(q) || w.uz.toLowerCase().includes(q)) {
                         if(count++ > 20) return;
                         const div = document.createElement('div');
-                        div.className = "bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-blue-50 transition flex justify-between items-center";
-                        div.innerHTML = `<div><div class="font-bold text-blue-600 dark:text-blue-400">${w.en}</div><div class="text-sm text-gray-600 dark:text-gray-300">${w.uz}</div></div><span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Unit ${uid}</span>`;
+                        div.className = "bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition flex justify-between items-center group";
+                        div.innerHTML = `<div><div class="font-bold text-blue-600 dark:text-blue-400 group-hover:text-blue-700">${w.en}</div><div class="text-sm text-gray-600 dark:text-gray-300">${w.uz}</div></div><span class="text-xs text-gray-400 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded">Unit ${uid}</span>`;
                         div.onclick = () => { document.getElementById('globalSearch').value=''; loadUnit(uid); };
                         list.appendChild(div);
                     }
@@ -1201,194 +1331,12 @@
             }
             if(count===0) list.innerHTML = '<div class="text-gray-400 text-center py-4">Natija topilmadi</div>';
         }
-        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
-        // --- NEW AI ROTATION LOGIC ---
-        function openAiPractice() {
-            if(!state.currentUnitId) { showToast("Avval birorta Unitni tanlang!"); return; }
-            const words = getFilteredWords();
-            if(words.length === 0) { showToast("Bu kategoriyada so'z yo'q"); return; }
-            document.getElementById('aiPracticeModal').classList.remove('hidden');
-            startAiPractice();
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
-
-        function startAiPractice() {
-            const words = getFilteredWords();
-            const randomWord = words[Math.floor(Math.random() * words.length)];
-            state.practiceWord = randomWord;
-            document.getElementById('aiPracticeWord').innerText = randomWord.en;
-            document.getElementById('aiPracticeTrans').innerText = randomWord.uz;
-            document.getElementById('aiPracticeInput').value = "";
-            document.getElementById('aiPracticeInput').disabled = false;
-            document.getElementById('aiPracticeFeedback').classList.add('hidden');
-            document.getElementById('aiCheckBtn').classList.remove('hidden');
-            document.getElementById('aiNextBtn').classList.add('hidden');
-            document.getElementById('aiPracticeInput').focus();
-        }
-
-        async function checkAiPractice() {
-            const userSentence = document.getElementById('aiPracticeInput').value.trim();
-            if(!userSentence) { showToast("Iltimos, gap yozing"); return; }
-            
-            const btn = document.getElementById('aiCheckBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...';
-            btn.disabled = true;
-
-            const prompt = `Check sentence: "${userSentence}" using word "${state.practiceWord.en}". Provide short feedback in Uzbek.`;
-
-            try {
-                const text = await callGemini(prompt);
-                if(text) {
-                    const feedbackDiv = document.getElementById('aiPracticeFeedback');
-                    feedbackDiv.innerHTML = marked.parse(text);
-                    feedbackDiv.className = "mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-200";
-                    feedbackDiv.classList.remove('hidden');
-                    document.getElementById('aiPracticeInput').disabled = true;
-                    btn.classList.add('hidden');
-                    document.getElementById('aiNextBtn').classList.remove('hidden');
-                }
-            } catch(e) { showToast("Xatolik yuz berdi"); } finally { btn.innerHTML = originalText; btn.disabled = false; }
-        }
-
-        async function generateSentence(word, btn) {
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
-            const row = btn.closest('.word-row');
-            let resDiv = row.querySelector('.ai-result');
-            const text = await callGemini(`Write 1 simple sentence (B1 level) using '${word}'. No translation.`);
-            if(text) { resDiv.innerHTML = `<span class="font-bold text-indigo-600 dark:text-indigo-400">Example:</span> ${text}`; resDiv.classList.remove('hidden'); }
-            btn.innerHTML = original; btn.disabled = false;
-        }
-
-        async function generateStory() {
-            const modal = document.getElementById('aiModal');
-            document.getElementById('aiModalContent').innerHTML = `<div class="flex flex-col items-center justify-center py-10"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div><p class="text-gray-500 font-medium">Qiziqarli hikoya yozilmoqda...</p></div>`;
-            document.getElementById('aiAudioControls').classList.add('hidden');
-            modal.classList.remove('hidden');
-            
-            const words = getFilteredWords().sort(()=>0.5-Math.random()).slice(0,5).map(w=>w.en);
-            if(words.length < 3) { document.getElementById('aiModalContent').innerHTML = "<p class='text-center text-red-500'>So'zlar yetarli emas.</p>"; return; }
-            
-            const text = await callGemini(`Write a funny short story (50 words) using: ${words.join(', ')}. Bold used words.`);
-            
-            if(text) {
-                const cleanText = text.replace(/\*\*/g, '');
-                state.currentStoryText = cleanText;
-                document.getElementById('aiModalContent').innerHTML = marked.parse(text);
-                document.getElementById('aiAudioControls').classList.remove('hidden');
-                document.getElementById('playStoryBtn').onclick = () => playAudio(state.currentStoryText);
-            } else { closeAiModal(); }
-        }
-
-        // --- IMPROVED CALL GEMINI (ROTATION) ---
-        async function callGemini(prompt) {
-            if (!apiKeys || apiKeys.length === 0) { showToast("API kalitlar yo'q!"); return null; }
-
-            // Loop through keys
-            for (let attempt = 0; attempt < apiKeys.length; attempt++) {
-                const apiKey = apiKeys[currentKeyIndex];
-                try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-
-                    // 429 = Too Many Requests (Quota limit reached)
-                    if (res.status === 429 || res.status === 403) {
-                        console.warn(`Key ${currentKeyIndex} exhausted. Rotating...`);
-                        currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
-                        continue; // Try next key immediately
-                    }
-
-                    if (!res.ok) throw new Error(`API Error: ${res.status}`);
-
-                    const data = await res.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                } catch (e) {
-                    console.error(e);
-                    // If network error or other error, try next key just in case
-                    if (attempt < apiKeys.length - 1) {
-                         currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
-                    } else {
-                        showToast("Barcha kalitlar band yoki xatolik.");
-                        return null;
-                    }
-                }
-            }
-            return null;
-        }
-
-        function closeAiModal() { document.getElementById('aiModal').classList.add('hidden'); }
-
     </script>
-
-    <!-- AI CHAT MODAL -->
-    <div id="aiChatModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4 animate-fade-in">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-lg shadow-2xl flex flex-col h-[80vh]">
-            <!-- Header -->
-            <div class="p-4 border-b dark:border-gray-700 bg-gradient-to-r from-green-500 to-teal-600 text-white flex justify-between items-center rounded-t-2xl">
-                <h3 class="font-bold text-lg"><i class="fas fa-comments mr-2"></i>AI Conversation</h3>
-                <button onclick="document.getElementById('aiChatModal').classList.add('hidden')" class="hover:bg-white/20 p-1 rounded"><i class="fas fa-times"></i></button>
-            </div>
-            <!-- Chat Body -->
-            <div id="aiChatBody" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-gray-50 dark:bg-gray-900"></div>
-            <!-- Input -->
-            <div class="p-3 border-t dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-2xl">
-                <div class="flex gap-2">
-                    <input type="text" id="aiChatInput" placeholder="Type your answer..." class="flex-1 p-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 outline-none">
-                    <button onclick="sendChat()" class="bg-green-600 text-white px-4 rounded-xl hover:bg-green-700 active:scale-95 transition"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI PRACTICE MODAL -->
-    <div id="aiPracticeModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4 animate-fade-in">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
-            <button onclick="document.getElementById('aiPracticeModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-            
-            <h3 class="text-xl font-bold dark:text-white mb-1 flex items-center gap-2"><i class="fas fa-robot text-blue-500"></i> Yozish Mashqi</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Berilgan so'z ishtirokida gap tuzing, AI tekshiradi.</p>
-
-            <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl text-center mb-4 border border-blue-100 dark:border-blue-800">
-                <span class="text-xs font-bold text-blue-500 uppercase tracking-widest">TASK WORD</span>
-                <h2 id="aiPracticeWord" class="text-3xl font-bold text-blue-800 dark:text-blue-300 mt-1">...</h2>
-                <p id="aiPracticeTrans" class="text-sm text-gray-600 dark:text-gray-400 italic">...</p>
-            </div>
-
-            <textarea id="aiPracticeInput" rows="3" placeholder="Ingliz tilida gap tuzing..." class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none resize-none"></textarea>
-
-            <div id="aiPracticeFeedback" class="hidden mt-4"></div>
-
-            <button onclick="checkAiPractice()" id="aiCheckBtn" class="w-full mt-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center gap-2">
-                <span>Tekshirish</span> <i class="fas fa-paper-plane"></i>
-            </button>
-             <button onclick="startAiPractice()" id="aiNextBtn" class="w-full mt-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold hidden">
-                Keyingi so'z <i class="fas fa-arrow-right ml-2"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- AI RESULT MODAL (For Stories) -->
-    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh] animate-slide-up">
-            <div class="p-4 border-b dark:border-gray-700 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center">
-                <h3 class="font-bold text-lg"><i class="fas fa-robot mr-2"></i>Gemini AI</h3>
-                <button onclick="closeAiModal()" class="hover:bg-white/20 p-1 rounded transition"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="flex-1 overflow-y-auto p-6" id="aiModalBody">
-                <div id="aiModalContent" class="text-gray-700 dark:text-gray-300 leading-relaxed text-md min-h-[100px]"></div>
-            </div>
-            <div id="aiAudioControls" class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30 hidden flex justify-center">
-                <button id="playStoryBtn" class="px-5 py-2 bg-blue-600 text-white rounded-full shadow-md flex items-center gap-2 hover:bg-blue-700 transition active:scale-95">
-                    <i class="fas fa-volume-up"></i> <span>Hikoyani tinglash</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
