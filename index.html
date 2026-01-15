@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Destination B1 Vocabulary (Unit 3)</title>
+    <title>Destination B1 Full Vocabulary</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -30,52 +30,24 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* --- 3D FLASHCARD FIXED --- */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
+        .perspective-1000 { perspective: 1000px; }
         .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+            position: relative; width: 100%; height: 100%;
+            text-align: center; transition: transform 0.6s; transform-style: preserve-3d;
         }
-        .card-container.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
+        .card-container.flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 1rem; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        .card-front {
-            background-color: white;
-            color: #1f2937;
-            z-index: 2;
-            transform: rotateY(0deg);
-        }
-        .dark .card-front {
-            background-color: #1f2937;
-            color: white;
-            border: 1px solid #374151;
-        }
-        .card-back {
-            background-color: #2563eb; /* Blue-600 */
-            color: white;
-            transform: rotateY(180deg);
-        }
+        .card-front { background-color: white; color: #1f2937; z-index: 2; transform: rotateY(0deg); }
+        .dark .card-front { background-color: #1f2937; color: white; border: 1px solid #374151; }
+        .card-back { background-color: #2563eb; color: white; transform: rotateY(180deg); }
 
-        /* Match Game Animations */
+        /* Animations */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -86,75 +58,396 @@
 
         /* UI Elements */
         .glass-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .dark .glass-header {
-            background: rgba(31, 41, 55, 0.95);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
+        .dark .glass-header { background: rgba(31, 41, 55, 0.95); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar { transition: transform 0.3s ease-in-out; }
-
-        #toast {
-            visibility: hidden; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
-        }
+        #toast { visibility: hidden; opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
         #toast.show { visibility: visible; opacity: 1; bottom: 80px; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
 
-    <!-- DATA SCRIPT -->
+    <!-- DATA SCRIPT (FULL DATABASE) -->
     <script>
         function generateData() {
             const data = {};
             
-            // --- FAQAT UNIT 3 (Sinov uchun) ---
+            // --- UNIT 3: Fun and Games ---
             data[3] = { title: "Fun and Games", data: [
-                { en: "beat", uz: "yengmoq (o'yinda)", cat: "Topic Vocabulary" },
-                { en: "board game", uz: "stol o'yini", cat: "Topic Vocabulary" },
-                { en: "captain", uz: "kapitan", cat: "Topic Vocabulary" },
-                { en: "challenge", uz: "chorlov", cat: "Topic Vocabulary" },
-                { en: "champion", uz: "chempion", cat: "Topic Vocabulary" },
-                { en: "cheat", uz: "g'irromlik qilmoq", cat: "Topic Vocabulary" },
-                { en: "classical music", uz: "mumtoz musiqa", cat: "Topic Vocabulary" },
-                { en: "club", uz: "klub", cat: "Topic Vocabulary" },
-                { en: "coach", uz: "murabbiy", cat: "Topic Vocabulary" },
-                { en: "competition", uz: "musobaqa", cat: "Topic Vocabulary" },
-                { en: "concert", uz: "konsert", cat: "Topic Vocabulary" },
-                { en: "defeat", uz: "mag'lub etmoq", cat: "Topic Vocabulary" },
-                { en: "entertaining", uz: "ko'ngilochar", cat: "Topic Vocabulary" },
-                { en: "folk music", uz: "xalq musiqasi", cat: "Topic Vocabulary" },
-                { en: "group", uz: "guruh", cat: "Topic Vocabulary" },
-                { en: "gym", uz: "sport zali", cat: "Topic Vocabulary" },
-                { en: "have fun", uz: "vaqtichog'lik qilmoq", cat: "Topic Vocabulary" },
-                { en: "interest", uz: "qiziqish", cat: "Topic Vocabulary" },
-                { en: "member", uz: "a'zo", cat: "Topic Vocabulary" },
-                { en: "opponent", uz: "raqib", cat: "Topic Vocabulary" },
-                { en: "organise", uz: "tashkillashtirmoq", cat: "Topic Vocabulary" },
-                { en: "pleasure", uz: "zavq", cat: "Topic Vocabulary" },
-                { en: "referee", uz: "hakam", cat: "Topic Vocabulary" },
-                { en: "rhythm", uz: "ritm", cat: "Topic Vocabulary" },
-                { en: "risk", uz: "tavakkal", cat: "Topic Vocabulary" },
-                { en: "score", uz: "hisob", cat: "Topic Vocabulary" },
-                { en: "support", uz: "qo'llab-quvvatlamoq", cat: "Topic Vocabulary" },
-                { en: "team", uz: "jamoa", cat: "Topic Vocabulary" },
-                { en: "train", uz: "shug'ullanmoq", cat: "Topic Vocabulary" },
-                { en: "video game", uz: "video o'yin", cat: "Topic Vocabulary" },
-                { en: "carry on", uz: "davom ettirmoq", cat: "Phrasal Verbs" },
-                { en: "eat out", uz: "ko'chada ovqatlanmoq", cat: "Phrasal Verbs" },
-                { en: "give up", uz: "taslim bo'lmoq", cat: "Phrasal Verbs" },
-                { en: "join in", uz: "qo'shilmoq", cat: "Phrasal Verbs" },
-                { en: "send off", uz: "chetlatmoq", cat: "Phrasal Verbs" },
-                { en: "take up", uz: "boshlamoq (hobby)", cat: "Phrasal Verbs" },
-                { en: "turn down", uz: "pasaytirmoq", cat: "Phrasal Verbs" },
-                { en: "turn up", uz: "kuchaytirmoq", cat: "Phrasal Verbs" },
-                { en: "for a long time", uz: "uzoq vaqt", cat: "Prepositional Phrases" },
-                { en: "for fun", uz: "ermakka", cat: "Prepositional Phrases" },
-                { en: "in the middle", uz: "o'rtasida", cat: "Prepositional Phrases" },
-                { en: "in time", uz: "o'z vaqtida", cat: "Prepositional Phrases" },
-                { en: "on stage", uz: "sahnada", cat: "Prepositional Phrases" }
+                {en:"beat", uz:"yengmoq", cat:"Topic Vocabulary"}, {en:"board game", uz:"stol o'yini", cat:"Topic Vocabulary"},
+                {en:"captain", uz:"kapitan", cat:"Topic Vocabulary"}, {en:"challenge", uz:"chorlov", cat:"Topic Vocabulary"},
+                {en:"champion", uz:"chempion", cat:"Topic Vocabulary"}, {en:"cheat", uz:"g'irromlik qilmoq", cat:"Topic Vocabulary"},
+                {en:"classical music", uz:"mumtoz musiqa", cat:"Topic Vocabulary"}, {en:"club", uz:"klub", cat:"Topic Vocabulary"},
+                {en:"coach", uz:"murabbiy", cat:"Topic Vocabulary"}, {en:"competition", uz:"musobaqa", cat:"Topic Vocabulary"},
+                {en:"concert", uz:"konsert", cat:"Topic Vocabulary"}, {en:"defeat", uz:"mag'lub etmoq", cat:"Topic Vocabulary"},
+                {en:"entertaining", uz:"ko'ngilochar", cat:"Topic Vocabulary"}, {en:"folk music", uz:"xalq musiqasi", cat:"Topic Vocabulary"},
+                {en:"group", uz:"guruh", cat:"Topic Vocabulary"}, {en:"gym", uz:"sport zali", cat:"Topic Vocabulary"},
+                {en:"have fun", uz:"vaqtichog'lik qilmoq", cat:"Topic Vocabulary"}, {en:"interest", uz:"qiziqish", cat:"Topic Vocabulary"},
+                {en:"member", uz:"a'zo", cat:"Topic Vocabulary"}, {en:"opponent", uz:"raqib", cat:"Topic Vocabulary"},
+                {en:"organise", uz:"tashkillashtirmoq", cat:"Topic Vocabulary"}, {en:"pleasure", uz:"zavq", cat:"Topic Vocabulary"},
+                {en:"referee", uz:"hakam", cat:"Topic Vocabulary"}, {en:"rhythm", uz:"ritm", cat:"Topic Vocabulary"},
+                {en:"risk", uz:"tavakkal", cat:"Topic Vocabulary"}, {en:"score", uz:"hisob", cat:"Topic Vocabulary"},
+                {en:"support", uz:"qo'llab-quvvatlamoq", cat:"Topic Vocabulary"}, {en:"team", uz:"jamoa", cat:"Topic Vocabulary"},
+                {en:"train", uz:"shug'ullanmoq", cat:"Topic Vocabulary"}, {en:"video game", uz:"video o'yin", cat:"Topic Vocabulary"},
+                {en:"carry on", uz:"davom ettirmoq", cat:"Phrasal Verbs"}, {en:"eat out", uz:"ko'chada ovqatlanmoq", cat:"Phrasal Verbs"},
+                {en:"give up", uz:"taslim bo'lmoq", cat:"Phrasal Verbs"}, {en:"join in", uz:"qo'shilmoq", cat:"Phrasal Verbs"},
+                {en:"send off", uz:"chetlatmoq", cat:"Phrasal Verbs"}, {en:"take up", uz:"boshlamoq (hobby)", cat:"Phrasal Verbs"},
+                {en:"turn down", uz:"pasaytirmoq", cat:"Phrasal Verbs"}, {en:"turn up", uz:"kuchaytirmoq", cat:"Phrasal Verbs"},
+                {en:"for a long time", uz:"uzoq vaqt", cat:"Prepositional Phrases"}, {en:"for fun", uz:"ermakka", cat:"Prepositional Phrases"},
+                {en:"in the middle", uz:"o'rtasida", cat:"Prepositional Phrases"}, {en:"in time", uz:"o'z vaqtida", cat:"Prepositional Phrases"},
+                {en:"on stage", uz:"sahnada", cat:"Prepositional Phrases"}, {en:"bored with", uz:"zerikkan", cat:"Word Patterns"},
+                {en:"crazy about", uz:"jinni bo'lmoq", cat:"Word Patterns"}, {en:"good at", uz:"yaxshi bo'lmoq", cat:"Word Patterns"},
+                {en:"interested in", uz:"qiziqqan", cat:"Word Patterns"}, {en:"keen on", uz:"ishqiboz", cat:"Word Patterns"},
+                {en:"popular with", uz:"mashhur", cat:"Word Patterns"}, {en:"feel like", uz:"xohlamoq", cat:"Word Patterns"},
+                {en:"listen to", uz:"tinglamoq", cat:"Word Patterns"}, {en:"take part in", uz:"qatnashmoq", cat:"Word Patterns"},
+                {en:"a fan of", uz:"muxlisi", cat:"Word Patterns"}, {en:"a game against", uz:"qarshi o'yin", cat:"Word Patterns"}
+            ]};
+
+            // --- UNIT 6: Learning and Doing ---
+            data[6] = { title: "Learning and Doing", data: [
+                {en:"achieve", uz:"erishmoq", cat:"Topic Vocabulary"}, {en:"brain", uz:"miya", cat:"Topic Vocabulary"},
+                {en:"clever", uz:"aqlli", cat:"Topic Vocabulary"}, {en:"concentrate", uz:"diqqatni jamlamoq", cat:"Topic Vocabulary"},
+                {en:"consider", uz:"o'ylab ko'rmoq", cat:"Topic Vocabulary"}, {en:"course", uz:"kurs", cat:"Topic Vocabulary"},
+                {en:"degree", uz:"daraja/diplom", cat:"Topic Vocabulary"}, {en:"experience", uz:"tajriba", cat:"Topic Vocabulary"},
+                {en:"expert", uz:"mutaxassis", cat:"Topic Vocabulary"}, {en:"fail", uz:"yiqilmoq (imtihon)", cat:"Topic Vocabulary"},
+                {en:"guess", uz:"taxmin qilmoq", cat:"Topic Vocabulary"}, {en:"hesitate", uz:"ikkilanmoq", cat:"Topic Vocabulary"},
+                {en:"instruction", uz:"ko'rsatma", cat:"Topic Vocabulary"}, {en:"make progress", uz:"rivojlanmoq", cat:"Topic Vocabulary"},
+                {en:"make sure", uz:"ishonch hosil qilmoq", cat:"Topic Vocabulary"}, {en:"mark", uz:"baho", cat:"Topic Vocabulary"},
+                {en:"mental", uz:"aqliy", cat:"Topic Vocabulary"}, {en:"pass", uz:"o'tmoq", cat:"Topic Vocabulary"},
+                {en:"qualification", uz:"malaka", cat:"Topic Vocabulary"}, {en:"remind", uz:"eslatmoq", cat:"Topic Vocabulary"},
+                {en:"report", uz:"hisobot", cat:"Topic Vocabulary"}, {en:"revise", uz:"takrorlamoq", cat:"Topic Vocabulary"},
+                {en:"search", uz:"qidirmoq", cat:"Topic Vocabulary"}, {en:"skill", uz:"mahorat", cat:"Topic Vocabulary"},
+                {en:"smart", uz:"aqlli", cat:"Topic Vocabulary"}, {en:"subject", uz:"fan", cat:"Topic Vocabulary"},
+                {en:"take an exam", uz:"imtihon topshirmoq", cat:"Topic Vocabulary"}, {en:"talented", uz:"iqtidorli", cat:"Topic Vocabulary"},
+                {en:"term", uz:"chorak/semestr", cat:"Topic Vocabulary"}, {en:"wonder", uz:"hayron qolmoq", cat:"Topic Vocabulary"},
+                {en:"cross out", uz:"o'chirib tashlamoq", cat:"Phrasal Verbs"}, {en:"look up", uz:"izlamoq (lug'at)", cat:"Phrasal Verbs"},
+                {en:"point out", uz:"ko'rsatmoq", cat:"Phrasal Verbs"}, {en:"read out", uz:"ovoz chiqarib o'qimoq", cat:"Phrasal Verbs"},
+                {en:"rip up", uz:"yirtib tashlamoq", cat:"Phrasal Verbs"}, {en:"rub out", uz:"o'chirg'ichda o'chirmoq", cat:"Phrasal Verbs"},
+                {en:"turn over", uz:"o'girmoq", cat:"Phrasal Verbs"}, {en:"write down", uz:"yozib olmoq", cat:"Phrasal Verbs"},
+                {en:"by heart", uz:"yoddan", cat:"Prepositional Phrases"}, {en:"for instance", uz:"misol uchun", cat:"Prepositional Phrases"},
+                {en:"in conclusion", uz:"xulosa qilib", cat:"Prepositional Phrases"}, {en:"in fact", uz:"aslida", cat:"Prepositional Phrases"},
+                {en:"in favour of", uz:"tarafdori", cat:"Prepositional Phrases"}, {en:"in general", uz:"umuman", cat:"Prepositional Phrases"},
+                {en:"capable of", uz:"qodir", cat:"Word Patterns"}, {en:"talented at", uz:"iqtidorli", cat:"Word Patterns"},
+                {en:"cheat at", uz:"g'irromlik qilmoq", cat:"Word Patterns"}, {en:"confuse with", uz:"adashtirmoq", cat:"Word Patterns"},
+                {en:"continue with", uz:"davom etmoq", cat:"Word Patterns"}, {en:"cope with", uz:"uddalamoq", cat:"Word Patterns"},
+                {en:"help with", uz:"yordamlashmoq", cat:"Word Patterns"}, {en:"know about", uz:"bilmoq", cat:"Word Patterns"},
+                {en:"learn about", uz:"o'rganmoq", cat:"Word Patterns"}, {en:"succeed in", uz:"muvaffaqiyatga erishmoq", cat:"Word Patterns"}
+            ]};
+
+            // --- UNIT 9: Coming and Going ---
+            data[9] = { title: "Coming and Going", data: [
+                {en:"abroad", uz:"chet elda", cat:"Topic Vocabulary"}, {en:"accommodation", uz:"turar joy", cat:"Topic Vocabulary"},
+                {en:"book", uz:"band qilmoq", cat:"Topic Vocabulary"}, {en:"break", uz:"tanaffus", cat:"Topic Vocabulary"},
+                {en:"cancel", uz:"bekor qilmoq", cat:"Topic Vocabulary"}, {en:"catch", uz:"tutmoq (transport)", cat:"Topic Vocabulary"},
+                {en:"coach", uz:"shaharleraro avtobus", cat:"Topic Vocabulary"}, {en:"convenient", uz:"qulay", cat:"Topic Vocabulary"},
+                {en:"crash", uz:"to'qnashuv", cat:"Topic Vocabulary"}, {en:"crowded", uz:"tirband", cat:"Topic Vocabulary"},
+                {en:"cruise", uz:"dengiz sayohati", cat:"Topic Vocabulary"}, {en:"delay", uz:"kechiktirmoq", cat:"Topic Vocabulary"},
+                {en:"destination", uz:"manzil", cat:"Topic Vocabulary"}, {en:"ferry", uz:"parom", cat:"Topic Vocabulary"},
+                {en:"flight", uz:"parvoz", cat:"Topic Vocabulary"}, {en:"foreign", uz:"xorijiy", cat:"Topic Vocabulary"},
+                {en:"harbour", uz:"bandargoh", cat:"Topic Vocabulary"}, {en:"journey", uz:"sayohat", cat:"Topic Vocabulary"},
+                {en:"luggage", uz:"yuk", cat:"Topic Vocabulary"}, {en:"nearby", uz:"yaqin atrofda", cat:"Topic Vocabulary"},
+                {en:"pack", uz:"joylamoq", cat:"Topic Vocabulary"}, {en:"passport", uz:"pasport", cat:"Topic Vocabulary"},
+                {en:"platform", uz:"platforma", cat:"Topic Vocabulary"}, {en:"public transport", uz:"jamoat transporti", cat:"Topic Vocabulary"},
+                {en:"reach", uz:"yetib bormoq", cat:"Topic Vocabulary"}, {en:"resort", uz:"kurort", cat:"Topic Vocabulary"},
+                {en:"souvenir", uz:"esdalik sovg'a", cat:"Topic Vocabulary"}, {en:"traffic", uz:"qatnov", cat:"Topic Vocabulary"},
+                {en:"trip", uz:"sayohat", cat:"Topic Vocabulary"}, {en:"vehicle", uz:"transport vositasi", cat:"Topic Vocabulary"},
+                {en:"get in", uz:"minmoq (mashina)", cat:"Phrasal Verbs"}, {en:"get out of", uz:"tushmoq (mashina)", cat:"Phrasal Verbs"},
+                {en:"get on", uz:"minmoq (avtobus)", cat:"Phrasal Verbs"}, {en:"get off", uz:"tushmoq (avtobus)", cat:"Phrasal Verbs"},
+                {en:"go away", uz:"ketib qolmoq", cat:"Phrasal Verbs"}, {en:"go back", uz:"qaytib ketmoq", cat:"Phrasal Verbs"},
+                {en:"set off", uz:"yo'lga chiqmoq", cat:"Phrasal Verbs"}, {en:"take off", uz:"havoga ko'tarilmoq", cat:"Phrasal Verbs"},
+                {en:"by air/sea/rail", uz:"havo/dengiz/poezd orqali", cat:"Prepositional Phrases"}, {en:"on board", uz:"bortda", cat:"Prepositional Phrases"},
+                {en:"on foot", uz:"piyoda", cat:"Prepositional Phrases"}, {en:"on holiday", uz:"ta'tilda", cat:"Prepositional Phrases"},
+                {en:"on schedule", uz:"jadval bo'yicha", cat:"Prepositional Phrases"}, {en:"on the coast", uz:"qirg'oqda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 12: Friends and Relations ---
+            data[12] = { title: "Friends and Relations", data: [
+                {en:"apologise", uz:"uzr so'ramoq", cat:"Topic Vocabulary"}, {en:"boyfriend", uz:"yigit o'rtoq", cat:"Topic Vocabulary"},
+                {en:"close", uz:"yaqin", cat:"Topic Vocabulary"}, {en:"confident", uz:"o'ziga ishongan", cat:"Topic Vocabulary"},
+                {en:"cool", uz:"ajoyib", cat:"Topic Vocabulary"}, {en:"couple", uz:"juftlik", cat:"Topic Vocabulary"},
+                {en:"decorate", uz:"bezatmoq", cat:"Topic Vocabulary"}, {en:"defend", uz:"himoya qilmoq", cat:"Topic Vocabulary"},
+                {en:"divorced", uz:"ajrashgan", cat:"Topic Vocabulary"}, {en:"flat", uz:"kvartira", cat:"Topic Vocabulary"},
+                {en:"generous", uz:"saxiy", cat:"Topic Vocabulary"}, {en:"girlfriend", uz:"qiz o'rtoq", cat:"Topic Vocabulary"},
+                {en:"grateful", uz:"minnatdor", cat:"Topic Vocabulary"}, {en:"guest", uz:"mehmon", cat:"Topic Vocabulary"},
+                {en:"independent", uz:"mustaqil", cat:"Topic Vocabulary"}, {en:"introduce", uz:"tanishtirmoq", cat:"Topic Vocabulary"},
+                {en:"loving", uz:"mehribon", cat:"Topic Vocabulary"}, {en:"loyal", uz:"sodiq", cat:"Topic Vocabulary"},
+                {en:"mood", uz:"kayfiyat", cat:"Topic Vocabulary"}, {en:"neighbour", uz:"qo'shni", cat:"Topic Vocabulary"},
+                {en:"ordinary", uz:"oddiy", cat:"Topic Vocabulary"}, {en:"patient", uz:"sabrli", cat:"Topic Vocabulary"},
+                {en:"private", uz:"shaxsiy", cat:"Topic Vocabulary"}, {en:"recognise", uz:"tanimoq", cat:"Topic Vocabulary"},
+                {en:"relation", uz:"qarindosh", cat:"Topic Vocabulary"}, {en:"rent", uz:"ijara", cat:"Topic Vocabulary"},
+                {en:"respect", uz:"hurmat qilmoq", cat:"Topic Vocabulary"}, {en:"single", uz:"bo'ydoq", cat:"Topic Vocabulary"},
+                {en:"stranger", uz:"notanish", cat:"Topic Vocabulary"}, {en:"trust", uz:"ishonmoq", cat:"Topic Vocabulary"},
+                {en:"bring up", uz:"tarbiyalamoq", cat:"Phrasal Verbs"}, {en:"fall out", uz:"urishib qolmoq", cat:"Phrasal Verbs"},
+                {en:"get on with", uz:"chiqishmoq", cat:"Phrasal Verbs"}, {en:"go out with", uz:"uchrashib yurmoq", cat:"Phrasal Verbs"},
+                {en:"grow up", uz:"ulg'aymoq", cat:"Phrasal Verbs"}, {en:"let down", uz:"pand bermoq", cat:"Phrasal Verbs"},
+                {en:"look after", uz:"g'amxo'rlik qilmoq", cat:"Phrasal Verbs"}, {en:"split up", uz:"ajrashmoq", cat:"Phrasal Verbs"},
+                {en:"by yourself", uz:"o'zingiz", cat:"Prepositional Phrases"}, {en:"in common", uz:"umumiy", cat:"Prepositional Phrases"},
+                {en:"in contact with", uz:"aloqada", cat:"Prepositional Phrases"}, {en:"in love with", uz:"sevib qolgan", cat:"Prepositional Phrases"},
+                {en:"on purpose", uz:"ataylab", cat:"Prepositional Phrases"}, {en:"on your own", uz:"yolg'iz", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 15: Buying and Selling ---
+            data[15] = { title: "Buying and Selling", data: [
+                {en:"advertisement", uz:"reklama", cat:"Topic Vocabulary"}, {en:"afford", uz:"qurbi yetmoq", cat:"Topic Vocabulary"},
+                {en:"bargain", uz:"kelishuv/arzon narsa", cat:"Topic Vocabulary"}, {en:"brand", uz:"brend", cat:"Topic Vocabulary"},
+                {en:"catalogue", uz:"katalog", cat:"Topic Vocabulary"}, {en:"change", uz:"qaytim", cat:"Topic Vocabulary"},
+                {en:"coin", uz:"tanga", cat:"Topic Vocabulary"}, {en:"cost", uz:"narxlanmoq", cat:"Topic Vocabulary"},
+                {en:"customer", uz:"xaridor", cat:"Topic Vocabulary"}, {en:"debt", uz:"qarz", cat:"Topic Vocabulary"},
+                {en:"demand", uz:"talab qilmoq", cat:"Topic Vocabulary"}, {en:"export", uz:"eksport", cat:"Topic Vocabulary"},
+                {en:"fee", uz:"to'lov", cat:"Topic Vocabulary"}, {en:"fortune", uz:"boylik", cat:"Topic Vocabulary"},
+                {en:"import", uz:"import", cat:"Topic Vocabulary"}, {en:"invest", uz:"sarmoya kiritmoq", cat:"Topic Vocabulary"},
+                {en:"obtain", uz:"qo'lga kiritmoq", cat:"Topic Vocabulary"}, {en:"owe", uz:"qarzdor bo'lmoq", cat:"Topic Vocabulary"},
+                {en:"own", uz:"egalik qilmoq", cat:"Topic Vocabulary"}, {en:"profit", uz:"foyda", cat:"Topic Vocabulary"},
+                {en:"property", uz:"mulk", cat:"Topic Vocabulary"}, {en:"purchase", uz:"sotib olmoq", cat:"Topic Vocabulary"},
+                {en:"receipt", uz:"chek", cat:"Topic Vocabulary"}, {en:"require", uz:"talab qilmoq", cat:"Topic Vocabulary"},
+                {en:"sale", uz:"sotuv", cat:"Topic Vocabulary"}, {en:"save", uz:"saqlamoq/yig'moq", cat:"Topic Vocabulary"},
+                {en:"select", uz:"tanlamoq", cat:"Topic Vocabulary"}, {en:"supply", uz:"ta'minlamoq", cat:"Topic Vocabulary"},
+                {en:"variety", uz:"xilma-xillik", cat:"Topic Vocabulary"}, {en:"waste", uz:"isrof qilmoq", cat:"Topic Vocabulary"},
+                {en:"add up", uz:"qo'shib hisoblamoq", cat:"Phrasal Verbs"}, {en:"come back", uz:"qaytib kelmoq", cat:"Phrasal Verbs"},
+                {en:"give away", uz:"tekinga bermoq", cat:"Phrasal Verbs"}, {en:"hurry up", uz:"shoshilmoq", cat:"Phrasal Verbs"},
+                {en:"pay back", uz:"qaytarib to'lamoq", cat:"Phrasal Verbs"}, {en:"save up", uz:"pul yig'moq", cat:"Phrasal Verbs"},
+                {en:"take back", uz:"qaytarib olmoq", cat:"Phrasal Verbs"}, {en:"take down", uz:"olib tashlamoq", cat:"Phrasal Verbs"},
+                {en:"by credit card", uz:"karta orqali", cat:"Prepositional Phrases"}, {en:"for rent", uz:"ijaraga", cat:"Prepositional Phrases"},
+                {en:"for sale", uz:"sotuvda", cat:"Prepositional Phrases"}, {en:"in cash", uz:"naqd pulda", cat:"Prepositional Phrases"},
+                {en:"in debt", uz:"qarzda", cat:"Prepositional Phrases"}, {en:"in good condition", uz:"yaxshi holatda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 18: Inventions and Discoveries ---
+            data[18] = { title: "Inventions and Discoveries", data: [
+                {en:"artificial", uz:"sun'iy", cat:"Topic Vocabulary"}, {en:"automatic", uz:"avtomatik", cat:"Topic Vocabulary"},
+                {en:"complicated", uz:"murakkab", cat:"Topic Vocabulary"}, {en:"decrease", uz:"kamaymoq", cat:"Topic Vocabulary"},
+                {en:"digital", uz:"raqamli", cat:"Topic Vocabulary"}, {en:"discover", uz:"kashf etmoq", cat:"Topic Vocabulary"},
+                {en:"effect", uz:"ta'sir", cat:"Topic Vocabulary"}, {en:"equipment", uz:"jihoz", cat:"Topic Vocabulary"},
+                {en:"estimate", uz:"baholamoq", cat:"Topic Vocabulary"}, {en:"exact", uz:"aniq", cat:"Topic Vocabulary"},
+                {en:"experiment", uz:"tajriba", cat:"Topic Vocabulary"}, {en:"gadget", uz:"qurilma", cat:"Topic Vocabulary"},
+                {en:"hardware", uz:"apparat ta'minoti", cat:"Topic Vocabulary"}, {en:"invent", uz:"ixtiro qilmoq", cat:"Topic Vocabulary"},
+                {en:"involve", uz:"jalb qilmoq", cat:"Topic Vocabulary"}, {en:"laboratory", uz:"laboratoriya", cat:"Topic Vocabulary"},
+                {en:"lack", uz:"yetishmovchilik", cat:"Topic Vocabulary"}, {en:"laptop", uz:"noutbuk", cat:"Topic Vocabulary"},
+                {en:"maximum", uz:"maksimal", cat:"Topic Vocabulary"}, {en:"minimum", uz:"minimal", cat:"Topic Vocabulary"},
+                {en:"operate", uz:"boshqarmoq", cat:"Topic Vocabulary"}, {en:"plastic", uz:"plastik", cat:"Topic Vocabulary"},
+                {en:"program", uz:"dastur", cat:"Topic Vocabulary"}, {en:"research", uz:"tadqiqot", cat:"Topic Vocabulary"},
+                {en:"run", uz:"ishlatmoq (dastur)", cat:"Topic Vocabulary"}, {en:"screen", uz:"ekran", cat:"Topic Vocabulary"},
+                {en:"software", uz:"dasturiy ta'minot", cat:"Topic Vocabulary"}, {en:"sudden", uz:"to'satdan", cat:"Topic Vocabulary"},
+                {en:"technology", uz:"texnologiya", cat:"Topic Vocabulary"}, {en:"unique", uz:"noyob", cat:"Topic Vocabulary"},
+                {en:"break down", uz:"buzilib qolmoq", cat:"Phrasal Verbs"}, {en:"come across", uz:"duch kelmoq", cat:"Phrasal Verbs"},
+                {en:"find out", uz:"bilib olmoq", cat:"Phrasal Verbs"}, {en:"make up", uz:"o'ylab topmoq", cat:"Phrasal Verbs"},
+                {en:"pull off", uz:"uzib olmoq", cat:"Phrasal Verbs"}, {en:"throw away", uz:"tashlab yubormoq", cat:"Phrasal Verbs"},
+                {en:"turn off", uz:"o'chirmoq", cat:"Phrasal Verbs"}, {en:"turn on", uz:"yoqmoq", cat:"Phrasal Verbs"},
+                {en:"at last", uz:"nihoyat", cat:"Prepositional Phrases"}, {en:"by chance", uz:"tasodifan", cat:"Prepositional Phrases"},
+                {en:"in my opinion", uz:"menimcha", cat:"Prepositional Phrases"}, {en:"in the end", uz:"yakunda", cat:"Prepositional Phrases"},
+                {en:"in the future", uz:"kelajakda", cat:"Prepositional Phrases"}, {en:"out of order", uz:"buzilgan", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 21: Sending and Receiving ---
+            data[21] = { title: "Sending and Receiving", data: [
+                {en:"accent", uz:"aksent", cat:"Topic Vocabulary"}, {en:"announcement", uz:"e'lon", cat:"Topic Vocabulary"},
+                {en:"broadcast", uz:"efirga uzatmoq", cat:"Topic Vocabulary"}, {en:"channel", uz:"kanal", cat:"Topic Vocabulary"},
+                {en:"clear", uz:"aniq", cat:"Topic Vocabulary"}, {en:"click", uz:"bosmoq", cat:"Topic Vocabulary"},
+                {en:"contact", uz:"aloqa", cat:"Topic Vocabulary"}, {en:"connection", uz:"bog'lanish", cat:"Topic Vocabulary"},
+                {en:"file", uz:"fayl", cat:"Topic Vocabulary"}, {en:"formal", uz:"rasmiy", cat:"Topic Vocabulary"},
+                {en:"image", uz:"tasvir", cat:"Topic Vocabulary"}, {en:"informal", uz:"norasmiy", cat:"Topic Vocabulary"},
+                {en:"internet", uz:"internet", cat:"Topic Vocabulary"}, {en:"interrupt", uz:"bo'lmoq (gapni)", cat:"Topic Vocabulary"},
+                {en:"link", uz:"havola", cat:"Topic Vocabulary"}, {en:"media", uz:"o'mmaviy axborot", cat:"Topic Vocabulary"},
+                {en:"mobile phone", uz:"mobil telefon", cat:"Topic Vocabulary"}, {en:"online", uz:"onlayn", cat:"Topic Vocabulary"},
+                {en:"pause", uz:"to'xtatmoq", cat:"Topic Vocabulary"}, {en:"persuade", uz:"ko'ndirmoq", cat:"Topic Vocabulary"},
+                {en:"pronounce", uz:"talaffuz qilmoq", cat:"Topic Vocabulary"}, {en:"publish", uz:"chop etmoq", cat:"Topic Vocabulary"},
+                {en:"report", uz:"xabar bermoq", cat:"Topic Vocabulary"}, {en:"request", uz:"so'rov", cat:"Topic Vocabulary"},
+                {en:"ring", uz:"qo'ng'iroq qilmoq", cat:"Topic Vocabulary"}, {en:"signal", uz:"signal", cat:"Topic Vocabulary"},
+                {en:"swear", uz:"qasam ichmoq/so'kinmoq", cat:"Topic Vocabulary"}, {en:"type", uz:"termoq (matn)", cat:"Topic Vocabulary"},
+                {en:"viewer", uz:"tomoshabin", cat:"Topic Vocabulary"}, {en:"website", uz:"veb-sayt", cat:"Topic Vocabulary"},
+                {en:"call back", uz:"qayta qo'ng'iroq qilmoq", cat:"Phrasal Verbs"}, {en:"come out", uz:"nashr etilmoq", cat:"Phrasal Verbs"},
+                {en:"cut off", uz:"uzilib qolmoq", cat:"Phrasal Verbs"}, {en:"fill in", uz:"to'ldirmoq", cat:"Phrasal Verbs"},
+                {en:"hang up", uz:"go'shakni qo'ymoq", cat:"Phrasal Verbs"}, {en:"log off", uz:"tizimdan chiqmoq", cat:"Phrasal Verbs"},
+                {en:"log on", uz:"tizimga kirmoq", cat:"Phrasal Verbs"}, {en:"print out", uz:"chop etmoq", cat:"Phrasal Verbs"},
+                {en:"by email", uz:"email orqali", cat:"Prepositional Phrases"}, {en:"on the internet", uz:"internetda", cat:"Prepositional Phrases"},
+                {en:"on the news", uz:"yangiliklarda", cat:"Prepositional Phrases"}, {en:"on the phone", uz:"telefonda", cat:"Prepositional Phrases"},
+                {en:"on the radio", uz:"radioda", cat:"Prepositional Phrases"}, {en:"on TV", uz:"televizorda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 24: People and Daily Life ---
+            data[24] = { title: "People and Daily Life", data: [
+                {en:"admit", uz:"tan olmoq", cat:"Topic Vocabulary"}, {en:"arrest", uz:"hibsga olmoq", cat:"Topic Vocabulary"},
+                {en:"charity", uz:"xayriya", cat:"Topic Vocabulary"}, {en:"commit", uz:"sodir etmoq", cat:"Topic Vocabulary"},
+                {en:"community", uz:"jamiyat", cat:"Topic Vocabulary"}, {en:"court", uz:"sud", cat:"Topic Vocabulary"},
+                {en:"criminal", uz:"jinoyatchi", cat:"Topic Vocabulary"}, {en:"culture", uz:"madaniyat", cat:"Topic Vocabulary"},
+                {en:"familiar", uz:"tanish", cat:"Topic Vocabulary"}, {en:"government", uz:"hukumat", cat:"Topic Vocabulary"},
+                {en:"habit", uz:"odat", cat:"Topic Vocabulary"}, {en:"identity card", uz:"shaxsiy guvohnoma", cat:"Topic Vocabulary"},
+                {en:"illegal", uz:"noqonuniy", cat:"Topic Vocabulary"}, {en:"politics", uz:"siyosat", cat:"Topic Vocabulary"},
+                {en:"population", uz:"aholi", cat:"Topic Vocabulary"}, {en:"prison", uz:"qamoqxona", cat:"Topic Vocabulary"},
+                {en:"protest", uz:"norozilik", cat:"Topic Vocabulary"}, {en:"resident", uz:"yashovchi", cat:"Topic Vocabulary"},
+                {en:"responsible", uz:"mas'uliyatli", cat:"Topic Vocabulary"}, {en:"rob", uz:"o'g'irlamoq", cat:"Topic Vocabulary"},
+                {en:"routine", uz:"kundalik tartib", cat:"Topic Vocabulary"}, {en:"schedule", uz:"jadval", cat:"Topic Vocabulary"},
+                {en:"situation", uz:"vaziyat", cat:"Topic Vocabulary"}, {en:"social", uz:"ijtimoiy", cat:"Topic Vocabulary"},
+                {en:"society", uz:"jamiyat", cat:"Topic Vocabulary"}, {en:"steal", uz:"o'g'irlamoq", cat:"Topic Vocabulary"},
+                {en:"tradition", uz:"an'ana", cat:"Topic Vocabulary"}, {en:"typical", uz:"odatiy", cat:"Topic Vocabulary"},
+                {en:"vote", uz:"ovoz bermoq", cat:"Topic Vocabulary"}, {en:"youth club", uz:"yoshlar klubi", cat:"Topic Vocabulary"},
+                {en:"break in", uz:"buzib kirmoq", cat:"Phrasal Verbs"}, {en:"catch up with", uz:"yetib olmoq", cat:"Phrasal Verbs"},
+                {en:"get away with", uz:"jazolanmasdan qolmoq", cat:"Phrasal Verbs"}, {en:"get up", uz:"o'rnidan turmoq", cat:"Phrasal Verbs"},
+                {en:"move in", uz:"ko'chib kirmoq", cat:"Phrasal Verbs"}, {en:"put away", uz:"joyiga qo'ymoq", cat:"Phrasal Verbs"},
+                {en:"wake up", uz:"uyg'onmoq", cat:"Phrasal Verbs"}, {en:"wash up", uz:"idish yuvmoq", cat:"Phrasal Verbs"},
+                {en:"against the law", uz:"qonunga zid", cat:"Prepositional Phrases"}, {en:"at the age of", uz:"yoshida", cat:"Prepositional Phrases"},
+                {en:"in public", uz:"ommaning oldida", cat:"Prepositional Phrases"}, {en:"in response to", uz:"javoban", cat:"Prepositional Phrases"},
+                {en:"in touch with", uz:"aloqada", cat:"Prepositional Phrases"}, {en:"in your teens", uz:"o'smirlikda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 27: Working and Earning ---
+            data[27] = { title: "Working and Earning", data: [
+                {en:"ambition", uz:"maqsad", cat:"Topic Vocabulary"}, {en:"application", uz:"ariza", cat:"Topic Vocabulary"},
+                {en:"bank account", uz:"bank hisobi", cat:"Topic Vocabulary"}, {en:"boss", uz:"boshliq", cat:"Topic Vocabulary"},
+                {en:"career", uz:"karyera", cat:"Topic Vocabulary"}, {en:"colleague", uz:"hamkasb", cat:"Topic Vocabulary"},
+                {en:"company", uz:"kompaniya", cat:"Topic Vocabulary"}, {en:"contract", uz:"shartnoma", cat:"Topic Vocabulary"},
+                {en:"department", uz:"bo'lim", cat:"Topic Vocabulary"}, {en:"deserve", uz:"loyiq bo'lmoq", cat:"Topic Vocabulary"},
+                {en:"earn", uz:"ishlab topmoq", cat:"Topic Vocabulary"}, {en:"fame", uz:"shon-shuhrat", cat:"Topic Vocabulary"},
+                {en:"goal", uz:"maqsad", cat:"Topic Vocabulary"}, {en:"impress", uz:"taassurot qoldirmoq", cat:"Topic Vocabulary"},
+                {en:"income", uz:"daromad", cat:"Topic Vocabulary"}, {en:"industry", uz:"sanoat", cat:"Topic Vocabulary"},
+                {en:"interview", uz:"suhbat", cat:"Topic Vocabulary"}, {en:"leader", uz:"rahbar", cat:"Topic Vocabulary"},
+                {en:"manager", uz:"menejer", cat:"Topic Vocabulary"}, {en:"pension", uz:"pensiya", cat:"Topic Vocabulary"},
+                {en:"poverty", uz:"kambag'allik", cat:"Topic Vocabulary"}, {en:"pressure", uz:"bosim", cat:"Topic Vocabulary"},
+                {en:"previous", uz:"oldingi", cat:"Topic Vocabulary"}, {en:"profession", uz:"kasb", cat:"Topic Vocabulary"},
+                {en:"retire", uz:"nafaqaga chiqmoq", cat:"Topic Vocabulary"}, {en:"salary", uz:"oylik maosh", cat:"Topic Vocabulary"},
+                {en:"staff", uz:"xodimlar", cat:"Topic Vocabulary"}, {en:"strike", uz:"ish tashlash", cat:"Topic Vocabulary"},
+                {en:"tax", uz:"soliq", cat:"Topic Vocabulary"}, {en:"wealthy", uz:"boy", cat:"Topic Vocabulary"},
+                {en:"call off", uz:"bekor qilmoq", cat:"Phrasal Verbs"}, {en:"give back", uz:"qaytarib bermoq", cat:"Phrasal Verbs"},
+                {en:"go on", uz:"davom etmoq", cat:"Phrasal Verbs"}, {en:"put off", uz:"kechiktirmoq", cat:"Phrasal Verbs"},
+                {en:"set up", uz:"tashkil qilmoq", cat:"Phrasal Verbs"}, {en:"stay up", uz:"uxlamay o'tirmoq", cat:"Phrasal Verbs"},
+                {en:"take away", uz:"olib ketmoq", cat:"Phrasal Verbs"}, {en:"take over", uz:"boshqaruvni olmoq", cat:"Phrasal Verbs"},
+                {en:"at work", uz:"ishda", cat:"Prepositional Phrases"}, {en:"in charge of", uz:"javobgar", cat:"Prepositional Phrases"},
+                {en:"on business", uz:"ish yuzasidan", cat:"Prepositional Phrases"}, {en:"on strike", uz:"ish tashlashda", cat:"Prepositional Phrases"},
+                {en:"on time", uz:"vaqtida", cat:"Prepositional Phrases"}, {en:"on duty", uz:"navbatchilikda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 30: Body and Lifestyle ---
+            data[30] = { title: "Body and Lifestyle", data: [
+                {en:"affect", uz:"ta'sir qilmoq", cat:"Topic Vocabulary"}, {en:"balance", uz:"muvozanat", cat:"Topic Vocabulary"},
+                {en:"benefit", uz:"foyda", cat:"Topic Vocabulary"}, {en:"breathe", uz:"nafas olmoq", cat:"Topic Vocabulary"},
+                {en:"chew", uz:"chaynamoq", cat:"Topic Vocabulary"}, {en:"chop", uz:"to'g'ramoq", cat:"Topic Vocabulary"},
+                {en:"contain", uz:"o'z ichiga olmoq", cat:"Topic Vocabulary"}, {en:"cough", uz:"yo'talmoq", cat:"Topic Vocabulary"},
+                {en:"cure", uz:"davolamoq", cat:"Topic Vocabulary"}, {en:"exercise", uz:"mashq", cat:"Topic Vocabulary"},
+                {en:"flu", uz:"grip", cat:"Topic Vocabulary"}, {en:"have an operation", uz:"operatsiya bo'lmoq", cat:"Topic Vocabulary"},
+                {en:"healthy", uz:"sog'lom", cat:"Topic Vocabulary"}, {en:"ignore", uz:"e'tiborsiz qoldirmoq", cat:"Topic Vocabulary"},
+                {en:"infection", uz:"infeksiya", cat:"Topic Vocabulary"}, {en:"ingredient", uz:"masalliq", cat:"Topic Vocabulary"},
+                {en:"injury", uz:"jarohat", cat:"Topic Vocabulary"}, {en:"limit", uz:"cheklammoq", cat:"Topic Vocabulary"},
+                {en:"meal", uz:"ovqat", cat:"Topic Vocabulary"}, {en:"pill", uz:"dori (tabletka)", cat:"Topic Vocabulary"},
+                {en:"recover", uz:"tuzalmoq", cat:"Topic Vocabulary"}, {en:"salty", uz:"sho'r", cat:"Topic Vocabulary"},
+                {en:"slice", uz:"tilim", cat:"Topic Vocabulary"}, {en:"sour", uz:"nordon", cat:"Topic Vocabulary"},
+                {en:"spicy", uz:"achchiq", cat:"Topic Vocabulary"}, {en:"stir", uz:"aralashtirmoq", cat:"Topic Vocabulary"},
+                {en:"suffer", uz:"azoblanmoq", cat:"Topic Vocabulary"}, {en:"taste", uz:"ta'm", cat:"Topic Vocabulary"},
+                {en:"treatment", uz:"davolash", cat:"Topic Vocabulary"}, {en:"vitamin", uz:"vitamin", cat:"Topic Vocabulary"},
+                {en:"cut down on", uz:"kamaytirmoq", cat:"Phrasal Verbs"}, {en:"fall down", uz:"yiqilmoq", cat:"Phrasal Verbs"},
+                {en:"get over", uz:"tuzalib ketmoq", cat:"Phrasal Verbs"}, {en:"go off", uz:"aynimmoq (ovqat)", cat:"Phrasal Verbs"},
+                {en:"lie down", uz:"yotmoq", cat:"Phrasal Verbs"}, {en:"put on", uz:"semirmoq/kiymoq", cat:"Phrasal Verbs"},
+                {en:"sit down", uz:"o'tirmoq", cat:"Phrasal Verbs"}, {en:"stand up", uz:"turmoq", cat:"Phrasal Verbs"},
+                {en:"at night", uz:"tunda", cat:"Prepositional Phrases"}, {en:"at risk", uz:"xavf ostida", cat:"Prepositional Phrases"},
+                {en:"in addition to", uz:"qo'shimcha ravishda", cat:"Prepositional Phrases"}, {en:"in comparison to", uz:"taqqoslaganda", cat:"Prepositional Phrases"},
+                {en:"in shape", uz:"formada", cat:"Prepositional Phrases"}, {en:"on a diet", uz:"parhezda", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 33: Creating and Building ---
+            data[33] = { title: "Creating and Building", data: [
+                {en:"ancient", uz:"qadimiy", cat:"Topic Vocabulary"}, {en:"checked", uz:"katakli", cat:"Topic Vocabulary"},
+                {en:"cotton", uz:"paxta", cat:"Topic Vocabulary"}, {en:"create", uz:"yaratmoq", cat:"Topic Vocabulary"},
+                {en:"design", uz:"dizayn", cat:"Topic Vocabulary"}, {en:"fix", uz:"tuzatmoq", cat:"Topic Vocabulary"},
+                {en:"fold", uz:"buklamoq", cat:"Topic Vocabulary"}, {en:"gallery", uz:"galereya", cat:"Topic Vocabulary"},
+                {en:"improvement", uz:"rivojlanish", cat:"Topic Vocabulary"}, {en:"loose", uz:"keng", cat:"Topic Vocabulary"},
+                {en:"maintain", uz:"ta'mirlamoq", cat:"Topic Vocabulary"}, {en:"match", uz:"moslashtirmoq", cat:"Topic Vocabulary"},
+                {en:"material", uz:"material", cat:"Topic Vocabulary"}, {en:"notice", uz:"payqamoq", cat:"Topic Vocabulary"},
+                {en:"pattern", uz:"andaza", cat:"Topic Vocabulary"}, {en:"pile", uz:"to'da", cat:"Topic Vocabulary"},
+                {en:"practical", uz:"amaliy", cat:"Topic Vocabulary"}, {en:"rough", uz:"notekis", cat:"Topic Vocabulary"},
+                {en:"shape", uz:"shakl", cat:"Topic Vocabulary"}, {en:"silk", uz:"ipak", cat:"Topic Vocabulary"},
+                {en:"sleeve", uz:"yeng", cat:"Topic Vocabulary"}, {en:"smooth", uz:"silliq", cat:"Topic Vocabulary"},
+                {en:"stretch", uz:"cho'zmoq", cat:"Topic Vocabulary"}, {en:"striped", uz:"yo'l-yo'l", cat:"Topic Vocabulary"},
+                {en:"style", uz:"uslub", cat:"Topic Vocabulary"}, {en:"suit", uz:"mos kelmoq", cat:"Topic Vocabulary"},
+                {en:"suitable", uz:"mos", cat:"Topic Vocabulary"}, {en:"tear", uz:"yirtmoq", cat:"Topic Vocabulary"},
+                {en:"tight", uz:"tor", cat:"Topic Vocabulary"}, {en:"tool", uz:"asbob", cat:"Topic Vocabulary"},
+                {en:"cut off", uz:"uzib qo'ymoq", cat:"Phrasal Verbs"}, {en:"do up", uz:"tugmani o'tkazmoq", cat:"Phrasal Verbs"},
+                {en:"fill up", uz:"to'ldirmoq", cat:"Phrasal Verbs"}, {en:"have on", uz:"kiyib yurmoq", cat:"Phrasal Verbs"},
+                {en:"leave out", uz:"qoldirib ketmoq", cat:"Phrasal Verbs"}, {en:"put on", uz:"kiymoq", cat:"Phrasal Verbs"},
+                {en:"take off", uz:"yechmoq", cat:"Phrasal Verbs"}, {en:"try on", uz:"kiyib ko'rmoq", cat:"Phrasal Verbs"},
+                {en:"at the back of", uz:"orqasida", cat:"Prepositional Phrases"}, {en:"at the end of", uz:"oxirida", cat:"Prepositional Phrases"},
+                {en:"in fashion", uz:"modada", cat:"Prepositional Phrases"}, {en:"in front of", uz:"oldida", cat:"Prepositional Phrases"},
+                {en:"in the corner of", uz:"burchagida", cat:"Prepositional Phrases"}, {en:"out of fashion", uz:"modadan qolgan", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 36: Nature and the Universe ---
+            data[36] = { title: "Nature and the Universe", data: [
+                {en:"amazing", uz:"hayratlanarli", cat:"Topic Vocabulary"}, {en:"climate", uz:"iqlim", cat:"Topic Vocabulary"},
+                {en:"countryside", uz:"qishloq", cat:"Topic Vocabulary"}, {en:"environment", uz:"atrof-muhit", cat:"Topic Vocabulary"},
+                {en:"extinct", uz:"yo'qolib ketgan", cat:"Topic Vocabulary"}, {en:"forecast", uz:"bashorat", cat:"Topic Vocabulary"},
+                {en:"freezing", uz:"muzlatadigan", cat:"Topic Vocabulary"}, {en:"global", uz:"global", cat:"Topic Vocabulary"},
+                {en:"heatwave", uz:"issiq to'lqin", cat:"Topic Vocabulary"}, {en:"insect", uz:"hashorat", cat:"Topic Vocabulary"},
+                {en:"lightning", uz:"chaqmoq", cat:"Topic Vocabulary"}, {en:"litter", uz:"axlat", cat:"Topic Vocabulary"},
+                {en:"local", uz:"mahalliy", cat:"Topic Vocabulary"}, {en:"locate", uz:"joylashmoq", cat:"Topic Vocabulary"},
+                {en:"mammal", uz:"sut emizuvchi", cat:"Topic Vocabulary"}, {en:"mild", uz:"mo'tadil", cat:"Topic Vocabulary"},
+                {en:"name", uz:"nomlamoq", cat:"Topic Vocabulary"}, {en:"origin", uz:"kelib chiqish", cat:"Topic Vocabulary"},
+                {en:"planet", uz:"sayyora", cat:"Topic Vocabulary"}, {en:"preserve", uz:"saqlamoq", cat:"Topic Vocabulary"},
+                {en:"recycle", uz:"qayta ishlamoq", cat:"Topic Vocabulary"}, {en:"reptile", uz:"sudralib yuruvchi", cat:"Topic Vocabulary"},
+                {en:"rescue", uz:"qutqarmoq", cat:"Topic Vocabulary"}, {en:"satellite", uz:"sun'iy yo'ldosh", cat:"Topic Vocabulary"},
+                {en:"shower", uz:"yomg'ir", cat:"Topic Vocabulary"}, {en:"solar system", uz:"quyosh tizimi", cat:"Topic Vocabulary"},
+                {en:"species", uz:"tur", cat:"Topic Vocabulary"}, {en:"thunder", uz:"momaqaldiroq", cat:"Topic Vocabulary"},
+                {en:"wild", uz:"yovvoyi", cat:"Topic Vocabulary"}, {en:"wildlife", uz:"yovvoyi tabiat", cat:"Topic Vocabulary"},
+                {en:"blow up", uz:"portlamoq", cat:"Phrasal Verbs"}, {en:"build up", uz:"oshmoq", cat:"Phrasal Verbs"},
+                {en:"clear up", uz:"tozalamoq", cat:"Phrasal Verbs"}, {en:"go out", uz:"o'chmoq (olov)", cat:"Phrasal Verbs"},
+                {en:"keep out", uz:"kiritmaslik", cat:"Phrasal Verbs"}, {en:"put down", uz:"pastga qo'ymoq", cat:"Phrasal Verbs"},
+                {en:"put out", uz:"o'chirmoq", cat:"Phrasal Verbs"}, {en:"put up", uz:"ilmoq", cat:"Phrasal Verbs"},
+                {en:"at most", uz:"ko'pi bilan", cat:"Prepositional Phrases"}, {en:"at the top of", uz:"tepasida", cat:"Prepositional Phrases"},
+                {en:"at the bottom of", uz:"tagida", cat:"Prepositional Phrases"}, {en:"in the beginning", uz:"boshida", cat:"Prepositional Phrases"},
+                {en:"in the distance", uz:"uzoqda", cat:"Prepositional Phrases"}, {en:"in total", uz:"jami", cat:"Prepositional Phrases"},
+                {en:"on top of", uz:"ustida", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 39: Laughing and Crying ---
+            data[39] = { title: "Laughing and Crying", data: [
+                {en:"amusing", uz:"kulgili", cat:"Topic Vocabulary"}, {en:"annoy", uz:"asabga tegmoq", cat:"Topic Vocabulary"},
+                {en:"attitude", uz:"munosabat", cat:"Topic Vocabulary"}, {en:"bad-tempered", uz:"jahldor", cat:"Topic Vocabulary"},
+                {en:"behave", uz:"o'zini tutmoq", cat:"Topic Vocabulary"}, {en:"bully", uz:"bezori", cat:"Topic Vocabulary"},
+                {en:"calm", uz:"bosiq", cat:"Topic Vocabulary"}, {en:"celebrate", uz:"nishonlamoq", cat:"Topic Vocabulary"},
+                {en:"character", uz:"xarakter", cat:"Topic Vocabulary"}, {en:"depressed", uz:"tushkun", cat:"Topic Vocabulary"},
+                {en:"embarrassing", uz:"uyatli", cat:"Topic Vocabulary"}, {en:"emotion", uz:"his-tuyg'u", cat:"Topic Vocabulary"},
+                {en:"enthusiastic", uz:"shijoatli", cat:"Topic Vocabulary"}, {en:"feeling", uz:"sezgi", cat:"Topic Vocabulary"},
+                {en:"glad", uz:"xursand", cat:"Topic Vocabulary"}, {en:"hurt", uz:"xafa qilmoq", cat:"Topic Vocabulary"},
+                {en:"miserable", uz:"g'amgin", cat:"Topic Vocabulary"}, {en:"naughty", uz:"to'polonchi", cat:"Topic Vocabulary"},
+                {en:"noisy", uz:"shovqinli", cat:"Topic Vocabulary"}, {en:"polite", uz:"odobli", cat:"Topic Vocabulary"},
+                {en:"react", uz:"reaksiya bildirmoq", cat:"Topic Vocabulary"}, {en:"regret", uz:"afsuslanmoq", cat:"Topic Vocabulary"},
+                {en:"ridiculous", uz:"bachkana", cat:"Topic Vocabulary"}, {en:"romantic", uz:"romantik", cat:"Topic Vocabulary"},
+                {en:"rude", uz:"qo'pol", cat:"Topic Vocabulary"}, {en:"sense of humour", uz:"hazilkashlik", cat:"Topic Vocabulary"},
+                {en:"shy", uz:"uyatchan", cat:"Topic Vocabulary"}, {en:"stress", uz:"stress", cat:"Topic Vocabulary"},
+                {en:"tell a joke", uz:"hazil qilmoq", cat:"Topic Vocabulary"}, {en:"upset", uz:"xafa", cat:"Topic Vocabulary"},
+                {en:"calm down", uz:"tinchlanmoq", cat:"Phrasal Verbs"}, {en:"cheer up", uz:"xursand bo'lmoq", cat:"Phrasal Verbs"},
+                {en:"come on", uz:"bo'laqol", cat:"Phrasal Verbs"}, {en:"go on", uz:"davom etmoq", cat:"Phrasal Verbs"},
+                {en:"hang on", uz:"kutib turmoq", cat:"Phrasal Verbs"}, {en:"run away", uz:"qochib ketmoq", cat:"Phrasal Verbs"},
+                {en:"shut up", uz:"jim bo'lmoq", cat:"Phrasal Verbs"}, {en:"speak up", uz:"balandroq gapirmoq", cat:"Phrasal Verbs"},
+                {en:"at first", uz:"avvaliga", cat:"Prepositional Phrases"}, {en:"at least", uz:"kamida", cat:"Prepositional Phrases"},
+                {en:"at times", uz:"ba'zan", cat:"Prepositional Phrases"}, {en:"in secret", uz:"yashirincha", cat:"Prepositional Phrases"},
+                {en:"in spite of", uz:"ga qaramasdan", cat:"Prepositional Phrases"}, {en:"in tears", uz:"ko'z yosh bilan", cat:"Prepositional Phrases"}
+            ]};
+
+            // --- UNIT 42: Problems and Solutions ---
+            data[42] = { title: "Problems and Solutions", data: [
+                {en:"accident", uz:"baxtsiz hodisa", cat:"Topic Vocabulary"}, {en:"assume", uz:"faraz qilmoq", cat:"Topic Vocabulary"},
+                {en:"cause", uz:"sabab bo'lmoq", cat:"Topic Vocabulary"}, {en:"claim", uz:"da'vo qilmoq", cat:"Topic Vocabulary"},
+                {en:"complain", uz:"shikoyat qilmoq", cat:"Topic Vocabulary"}, {en:"convince", uz:"ishontirmoq", cat:"Topic Vocabulary"},
+                {en:"criticise", uz:"tanqid qilmoq", cat:"Topic Vocabulary"}, {en:"deny", uz:"rad etmoq", cat:"Topic Vocabulary"},
+                {en:"discussion", uz:"muhokama", cat:"Topic Vocabulary"}, {en:"doubt", uz:"shubha", cat:"Topic Vocabulary"},
+                {en:"encourage", uz:"ruhlanmoq", cat:"Topic Vocabulary"}, {en:"get rid of", uz:"qutulmoq", cat:"Topic Vocabulary"},
+                {en:"gossip", uz:"g'iybat", cat:"Topic Vocabulary"}, {en:"ideal", uz:"ideal", cat:"Topic Vocabulary"},
+                {en:"insult", uz:"haqoratlamoq", cat:"Topic Vocabulary"}, {en:"investigate", uz:"tekshirmoq", cat:"Topic Vocabulary"},
+                {en:"negative", uz:"salbiy", cat:"Topic Vocabulary"}, {en:"positive", uz:"ijobiy", cat:"Topic Vocabulary"},
+                {en:"praise", uz:"maqtamoq", cat:"Topic Vocabulary"}, {en:"pretend", uz:"o'zini ...ga solmoq", cat:"Topic Vocabulary"},
+                {en:"purpose", uz:"maqsad", cat:"Topic Vocabulary"}, {en:"refuse", uz:"rad etmoq", cat:"Topic Vocabulary"},
+                {en:"result", uz:"natija", cat:"Topic Vocabulary"}, {en:"rumour", uz:"mish-mish", cat:"Topic Vocabulary"},
+                {en:"sensible", uz:"aqlli", cat:"Topic Vocabulary"}, {en:"serious", uz:"jiddiy", cat:"Topic Vocabulary"},
+                {en:"spare", uz:"ortiqcha", cat:"Topic Vocabulary"}, {en:"theory", uz:"nazariya", cat:"Topic Vocabulary"},
+                {en:"thought", uz:"fikr", cat:"Topic Vocabulary"}, {en:"warn", uz:"ogohlantirmoq", cat:"Topic Vocabulary"},
+                {en:"hang up", uz:"ilib qo'ymoq", cat:"Phrasal Verbs"}, {en:"pick up", uz:"terib olmoq", cat:"Phrasal Verbs"},
+                {en:"put back", uz:"joyiga qo'ymoq", cat:"Phrasal Verbs"}, {en:"run out of", uz:"tugab qolmoq", cat:"Phrasal Verbs"},
+                {en:"share out", uz:"bo'lishmoq", cat:"Phrasal Verbs"}, {en:"sort out", uz:"hal qilmoq", cat:"Phrasal Verbs"},
+                {en:"watch out", uz:"ehtiyot bo'lmoq", cat:"Phrasal Verbs"}, {en:"work out", uz:"yechim topmoq", cat:"Phrasal Verbs"},
+                {en:"by accident", uz:"tasodifan", cat:"Prepositional Phrases"}, {en:"by mistake", uz:"adashib", cat:"Prepositional Phrases"},
+                {en:"in a mess", uz:"tartibsiz", cat:"Prepositional Phrases"}, {en:"in danger", uz:"xavfda", cat:"Prepositional Phrases"},
+                {en:"in my view", uz:"mening fikrimcha", cat:"Prepositional Phrases"}, {en:"in trouble", uz:"muammoda", cat:"Prepositional Phrases"},
+                {en:"under pressure", uz:"bosim ostida", cat:"Prepositional Phrases"}
             ]};
 
             return data;
@@ -165,8 +458,7 @@
     <!-- SIDEBAR -->
     <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl transform -translate-x-full md:translate-x-0 md:relative md:shadow-none flex flex-col border-r dark:border-gray-700">
         <div class="p-4 bg-blue-600 text-white flex justify-between items-center shadow-md z-10">
-            <h1 class="text-xl font-bold tracking-tight"><i class="fas fa-book-open mr-2"></i>Destination</h1>
-            <button onclick="openSettings()" class="text-white hover:bg-blue-700 p-2 rounded-full transition"><i class="fas fa-cog"></i></button>
+            <h1 class="text-xl font-bold tracking-tight"><i class="fas fa-book-open mr-2"></i>Destination B1</h1>
         </div>
         
         <div class="p-3 bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700">
@@ -194,7 +486,6 @@
                     <p id="wordCount" class="text-[10px] text-gray-500 dark:text-gray-400 hidden">0 so'z</p>
                 </div>
             </div>
-            <button onclick="openSettings()" class="md:hidden text-gray-600 dark:text-gray-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fas fa-cog"></i></button>
         </header>
 
         <div id="filterContainer" class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar whitespace-nowrap bg-white dark:bg-gray-800 border-b dark:border-gray-700 hidden shrink-0">
@@ -211,7 +502,7 @@
                     <i class="fas fa-book-reader text-5xl text-blue-500"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200">Xush kelibsiz!</h3>
-                <p class="text-sm">Boshlash uchun chap menyudan Unit 3 ni tanlang.</p>
+                <p class="text-sm">Boshlash uchun chap menyudan Unit tanlang.</p>
             </div>
 
             <div id="listView" class="hidden space-y-3 pb-10"></div>
@@ -276,24 +567,6 @@
         </nav>
     </main>
 
-    <!-- SETTINGS MODAL -->
-    <div id="settingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4 animate-fade-in">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl transform transition-all scale-100">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold dark:text-white"><i class="fas fa-cog mr-2 text-gray-500"></i>Sozlamalar</h3>
-                <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <div id="apiKeyContainer" class="mb-5">
-                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Google Gemini API Key</label>
-                <input type="password" id="apiKeyInput" placeholder="AI funksiyalari uchun kalit..." class="w-full p-3 border rounded-xl text-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition">
-                <p class="text-xs text-gray-500 mt-2">AI Story va Gap tuzish uchun kerak.</p>
-            </div>
-
-            <button onclick="saveSettings()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition">Saqlash</button>
-        </div>
-    </div>
-
     <!-- AI RESULT MODAL -->
     <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh] animate-slide-up">
@@ -301,7 +574,15 @@
                 <h3 class="font-bold text-lg"><i class="fas fa-robot mr-2"></i>Gemini AI</h3>
                 <button onclick="closeAiModal()" class="hover:bg-white/20 p-1 rounded transition"><i class="fas fa-times"></i></button>
             </div>
-            <div id="aiModalContent" class="p-6 overflow-y-auto text-gray-700 dark:text-gray-300 leading-relaxed text-md min-h-[150px]"></div>
+            <div class="flex-1 overflow-y-auto p-6" id="aiModalBody">
+                <div id="aiModalContent" class="text-gray-700 dark:text-gray-300 leading-relaxed text-md min-h-[100px]"></div>
+            </div>
+            <!-- Story Audio Controls -->
+            <div id="aiAudioControls" class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30 hidden flex justify-center">
+                <button id="playStoryBtn" class="px-5 py-2 bg-blue-600 text-white rounded-full shadow-md flex items-center gap-2 hover:bg-blue-700 transition active:scale-95">
+                    <i class="fas fa-volume-up"></i> <span>Hikoyani tinglash</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -310,14 +591,14 @@
     <script>
         // --- CONFIG & STATE ---
         const HARDCODED_API_KEY = "AIzaSyDkTeVafJvVhGaXd9JuBWOPsqzIgZCpMg4"; 
+        let userApiKey = HARDCODED_API_KEY;
         
-        let userApiKey = HARDCODED_API_KEY || localStorage.getItem('gemini_api_key') || "";
-
         const state = {
             currentUnitId: null, currentTab: 'list', currentFilter: 'all',
             words: [], flashcardIndex: 0,
             matchGame: { selected: null, matchesFound: 0, pairs: [] },
-            quiz: { questions: [], currentIndex: 0, score: 0, hintsUsed: 0 }
+            quiz: { questions: [], currentIndex: 0, score: 0, hintsUsed: 0 },
+            currentStoryText: "" // Store generated story text for audio
         };
 
         const tg = window.Telegram.WebApp;
@@ -328,32 +609,7 @@
             renderSidebar();
             document.getElementById('globalSearch').addEventListener('input', (e) => handleGlobalSearch(e.target.value));
             document.getElementById('quizInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkQuizAnswer(); });
-            
-            // Populate settings
-            if (!HARDCODED_API_KEY) {
-                document.getElementById('apiKeyInput').value = userApiKey;
-            } else {
-                // Agar Hardcoded kalit bo'lsa, input maydonini butunlay yashiramiz
-                document.getElementById('apiKeyContainer').classList.add('hidden');
-            }
         });
-
-        // --- SETTINGS ---
-        function openSettings() { document.getElementById('settingsModal').classList.remove('hidden'); }
-        function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
-        function saveSettings() {
-            let key = userApiKey;
-            if (!HARDCODED_API_KEY) {
-                key = document.getElementById('apiKeyInput').value.trim();
-                localStorage.setItem('gemini_api_key', key);
-            }
-            
-            userApiKey = key || HARDCODED_API_KEY;
-            
-            showToast("Sozlamalar saqlandi");
-            closeSettings();
-            if(state.currentTab === 'list' && state.currentUnitId) renderList();
-        }
 
         // --- NAVIGATION ---
         function toggleSidebar() {
@@ -456,9 +712,7 @@
             aiBtn.className = "mb-4";
             if(userApiKey) {
                 aiBtn.innerHTML = `<button onclick="generateStory()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl shadow-lg font-bold hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center"><i class="fas fa-magic mr-2 animate-pulse"></i>AI Hikoya Yaratish</button>`;
-            } else {
-                aiBtn.innerHTML = `<button onclick="openSettings()" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 py-3 rounded-xl shadow-sm font-medium border border-dashed border-gray-400 dark:border-gray-600 flex items-center justify-center"><i class="fas fa-lock mr-2"></i>AI Hikoya (Kalit kiritish)</button>`;
-            }
+            } 
             container.appendChild(aiBtn);
 
             if(words.length === 0) {
@@ -720,7 +974,7 @@
 
         // --- AI GENERATION ---
         async function callGemini(prompt) {
-            if(!userApiKey) { showToast("Xatolik: API kalit kiritilmagan!"); setTimeout(() => openSettings(), 1500); return null; }
+            if(!userApiKey) { showToast("Xatolik: API kalit kiritilmagan!"); return null; }
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${userApiKey}`, {
                     method: 'POST',
@@ -751,12 +1005,29 @@
         async function generateStory() {
             const modal = document.getElementById('aiModal');
             document.getElementById('aiModalContent').innerHTML = `<div class="flex flex-col items-center justify-center py-10"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div><p class="text-gray-500 font-medium">Qiziqarli hikoya yozilmoqda...</p></div>`;
+            document.getElementById('aiAudioControls').classList.add('hidden'); // Hide audio button initially
             modal.classList.remove('hidden');
+            
             const words = getFilteredWords().sort(()=>0.5-Math.random()).slice(0,5).map(w=>w.en);
             if(words.length < 3) { document.getElementById('aiModalContent').innerHTML = "<p class='text-center text-red-500'>Hikoya uchun so'zlar yetarli emas.</p>"; return; }
+            
             const text = await callGemini(`Write a funny, short story (max 50 words) using these words: ${words.join(', ')}. Mark the used words in bold (**word**). Keep it B1 level English.`);
-            if(text) document.getElementById('aiModalContent').innerHTML = marked.parse(text);
-            else closeAiModal();
+            
+            if(text) {
+                // Remove markdown bolding for audio reading (clean text)
+                const cleanText = text.replace(/\*\*/g, '');
+                state.currentStoryText = cleanText;
+                
+                document.getElementById('aiModalContent').innerHTML = marked.parse(text);
+                document.getElementById('aiAudioControls').classList.remove('hidden');
+                
+                // Attach click handler to play button
+                const playBtn = document.getElementById('playStoryBtn');
+                playBtn.onclick = () => playAudio(state.currentStoryText);
+                
+            } else {
+                closeAiModal();
+            }
         }
 
         function closeAiModal() { document.getElementById('aiModal').classList.add('hidden'); }
