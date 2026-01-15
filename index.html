@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Destination B1 Vocabulary</title>
+    
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Markdown Parser (for AI responses) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--tg-theme-bg-color, #f3f4f6);
+            color: var(--tg-theme-text-color, #1f2937);
+            overscroll-behavior: none; /* Pull-to-refreshni bloklash */
+        }
+
+        /* Scrollbar yashirish */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 3D Flashcard Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .card-container {
+            transition: transform 0.6s;
+        }
+        .card-container.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Match Game Shake Animation */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        .shake {
+            animation: shake 0.4s ease-in-out;
+            background-color: #fee2e2 !important; /* Red-100 */
+            border-color: #ef4444 !important; /* Red-500 */
+        }
+        .matched {
+            background-color: #dcfce7 !important; /* Green-100 */
+            border-color: #22c55e !important; /* Green-500 */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.3s, opacity 0.3s linear;
+        }
+
+        /* Custom UI Elements */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .dark .glass-header {
+            background: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Sidebar Transition */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 30px;
+        }
+
+        /* AI Loading Animation */
+        .ai-sparkle {
+            display: inline-block;
+            animation: sparkle 1.5s infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <!-- DATA STRUCTURE & INITIALIZATION -->
+    <script>
+        // Data generation helper to fill Units 3-42
+        function generateData() {
+            const data = {};
+            
+            // Sample Real Content for Unit 3 (Fun and Games)
+            data[3] = {
+                title: "Fun and Games",
+                data: [
+                    { en: "beat", uz: "yengmoq (o'yinda)", cat: "Topic Vocabulary" },
+                    { en: "board game", uz: "stol o'yini", cat: "Topic Vocabulary" },
+                    { en: "captain", uz: "kapitan", cat: "Topic Vocabulary" },
+                    { en: "challenge", uz: "chorlov/qiyinchilik", cat: "Topic Vocabulary" },
+                    { en: "champion", uz: "chempion", cat: "Topic Vocabulary" },
+                    { en: "cheat", uz: "g'irromlik qilmoq", cat: "Topic Vocabulary" },
+                    { en: "classical music", uz: "mumtoz musiqa", cat: "Topic Vocabulary" },
+                    { en: "club", uz: "klub/to'garak", cat: "Topic Vocabulary" },
+                    { en: "coach", uz: "murabbiy", cat: "Topic Vocabulary" },
+                    { en: "competition", uz: "musobaqa", cat: "Topic Vocabulary" },
+                    { en: "concert", uz: "konsert", cat: "Topic Vocabulary" },
+                    { en: "defeat", uz: "mag'lub etmoq", cat: "Topic Vocabulary" },
+                    { en: "entertaining", uz: "ko'ngilochar", cat: "Topic Vocabulary" },
+                    { en: "folk music", uz: "xalq musiqasi", cat: "Topic Vocabulary" },
+                    { en: "group", uz: "guruh", cat: "Topic Vocabulary" },
+                    { en: "gym", uz: "sport zali", cat: "Topic Vocabulary" },
+                    { en: "have fun", uz: "vaqtichog'lik qilmoq", cat: "Topic Vocabulary" },
+                    { en: "interest", uz: "qiziqish", cat: "Topic Vocabulary" },
+                    { en: "member", uz: "a'zo", cat: "Topic Vocabulary" },
+                    { en: "opponent", uz: "raqib", cat: "Topic Vocabulary" },
+                    { en: "organise", uz: "tashkillashtirmoq", cat: "Topic Vocabulary" },
+                    { en: "pleasure", uz: "zavq", cat: "Topic Vocabulary" },
+                    { en: "referee", uz: "hakam", cat: "Topic Vocabulary" },
+                    { en: "rhythm", uz: "ritm (ohang)", cat: "Topic Vocabulary" },
+                    { en: "risk", uz: "tavakkal", cat: "Topic Vocabulary" },
+                    { en: "score", uz: "hisob (o'yinda)", cat: "Topic Vocabulary" },
+                    { en: "support", uz: "qo'llab-quvvatlamoq", cat: "Topic Vocabulary" },
+                    { en: "team", uz: "jamoa", cat: "Topic Vocabulary" },
+                    { en: "train", uz: "shug'ullanmoq", cat: "Topic Vocabulary" },
+                    { en: "video game", uz: "video o'yin", cat: "Topic Vocabulary" },
+                    { en: "carry on", uz: "davom ettirmoq", cat: "Phrasal Verbs" },
+                    { en: "eat out", uz: "ko'chada ovqatlanmoq", cat: "Phrasal Verbs" },
+                    { en: "give up", uz: "taslim bo'lmoq", cat: "Phrasal Verbs" },
+                    { en: "join in", uz: "qo'shilmoq", cat: "Phrasal Verbs" },
+                    { en: "send off", uz: "chetlatmoq (o'yindan)", cat: "Phrasal Verbs" },
+                    { en: "take up", uz: "shug'ullanishni boshlamoq", cat: "Phrasal Verbs" },
+                    { en: "turn down", uz: "pasaytirmoq (ovozni)", cat: "Phrasal Verbs" },
+                    { en: "turn up", uz: "kuchaytirmoq (ovozni)", cat: "Phrasal Verbs" },
+                    { en: "for a long time", uz: "uzoq vaqt davomida", cat: "Prepositional Phrases" },
+                    { en: "for fun", uz: "ermakka", cat: "Prepositional Phrases" },
+                    { en: "in the middle", uz: "o'rtasida", cat: "Prepositional Phrases" },
+                    { en: "in time", uz: "o'z vaqtida", cat: "Prepositional Phrases" },
+                    { en: "on CD/DVD/video", uz: "CD/DVD/videoda", cat: "Prepositional Phrases" },
+                    { en: "on stage", uz: "sahnada", cat: "Prepositional Phrases" }
+                ]
+            };
+
+            // Sample Real Content for Unit 4 (Learning and Doing)
+            data[4] = {
+                title: "Learning and Doing",
+                data: [
+                    { en: "achieve", uz: "erishmoq", cat: "Topic Vocabulary" },
+                    { en: "brain", uz: "miya", cat: "Topic Vocabulary" },
+                    { en: "clever", uz: "aqlli", cat: "Topic Vocabulary" },
+                    { en: "concentrate", uz: "diqqatni jamlamoq", cat: "Topic Vocabulary" },
+                    { en: "consider", uz: "o'ylab ko'rmoq", cat: "Topic Vocabulary" },
+                    { en: "course", uz: "kurs", cat: "Topic Vocabulary" },
+                    { en: "degree", uz: "daraja (diplom)", cat: "Topic Vocabulary" },
+                    { en: "experience", uz: "tajriba", cat: "Topic Vocabulary" },
+                    { en: "expert", uz: "mutaxassis", cat: "Topic Vocabulary" },
+                    { en: "fail", uz: "yiqilmoq (imtihondan)", cat: "Topic Vocabulary" },
+                    { en: "guess", uz: "taxmin qilmoq", cat: "Topic Vocabulary" },
+                    { en: "hesitate", uz: "ikkilanmoq", cat: "Topic Vocabulary" },
+                    { en: "instruction", uz: "ko'rsatma", cat: "Topic Vocabulary" },
+                    { en: "make progress", uz: "rivojlanmoq", cat: "Topic Vocabulary" },
+                    { en: "make sure", uz: "ishonch hosil qilmoq", cat: "Topic Vocabulary" },
+                    { en: "mark", uz: "baho", cat: "Topic Vocabulary" },
+                    { en: "mental", uz: "aqliy", cat: "Topic Vocabulary" },
+                    { en: "pass", uz: "o'tmoq (imtihondan)", cat: "Topic Vocabulary" },
+                    { en: "qualification", uz: "malaka", cat: "Topic Vocabulary" },
+                    { en: "remind", uz: "eslatmoq", cat: "Topic Vocabulary" },
+                    { en: "report", uz: "hisobot", cat: "Topic Vocabulary" },
+                    { en: "revise", uz: "takrorlamoq", cat: "Topic Vocabulary" },
+                    { en: "search", uz: "qidirmoq", cat: "Topic Vocabulary" },
+                    { en: "skill", uz: "mahorat", cat: "Topic Vocabulary" },
+                    { en: "smart", uz: "aqlli", cat: "Topic Vocabulary" },
+                    { en: "subject", uz: "fan", cat: "Topic Vocabulary" },
+                    { en: "take an exam", uz: "imtihon topshirmoq", cat: "Topic Vocabulary" },
+                    { en: "talented", uz: "iqtidorli", cat: "Topic Vocabulary" },
+                    { en: "term", uz: "chorak/semestr", cat: "Topic Vocabulary" },
+                    { en: "wonder", uz: "qiziqmoq (hayron qolmoq)", cat: "Topic Vocabulary" },
+                    { en: "cross out", uz: "o'chirib tashlamoq", cat: "Phrasal Verbs" },
+                    { en: "look up", uz: "izlamoq (lug'atdan)", cat: "Phrasal Verbs" },
+                    { en: "point out", uz: "ko'rsatmoq/ta'kidlamoq", cat: "Phrasal Verbs" },
+                    { en: "read out", uz: "ovoz chiqarib o'qimoq", cat: "Phrasal Verbs" },
+                    { en: "rip up", uz: "yirtib tashlamoq", cat: "Phrasal Verbs" },
+                    { en: "rub out", uz: "o'chirg'ichda o'chirmoq", cat: "Phrasal Verbs" },
+                    { en: "turn over", uz: "varaqni o'girmoq", cat: "Phrasal Verbs" },
+                    { en: "write down", uz: "yozib olmoq", cat: "Phrasal Verbs" },
+                    { en: "by heart", uz: "yoddan", cat: "Prepositional Phrases" },
+                    { en: "for instance", uz: "misol uchun", cat: "Prepositional Phrases" },
+                    { en: "in conclusion", uz: "xulosa qilib", cat: "Prepositional Phrases" },
+                    { en: "in fact", uz: "aslida", cat: "Prepositional Phrases" },
+                    { en: "in favour of", uz: "foydasiga/tarafdori", cat: "Prepositional Phrases" },
+                    { en: "in general", uz: "umuman olganda", cat: "Prepositional Phrases" }
+                ]
+            };
+
+            // Filling Units 5-42 with placeholders/simulated data to meet structure requirement
+            const unitTitles = {
+                6: "Buying and Selling", 9: "Inventions and Discoveries", 12: "Sending and Receiving",
+                15: "People and Daily Life", 18: "Working and Earning", 21: "Body and Lifestyle",
+                24: "Nature and Universe", 27: "Relationships and People", 30: "Entertainment",
+                33: "Fashion and Design", 36: "Crime and Law", 39: "Media and Art", 42: "Tourism and Travel"
+            };
+
+            for (let i = 3; i <= 42; i++) {
+                if (data[i]) continue; // Skip existing
+                
+                const title = unitTitles[i] || `Unit ${i} Vocabulary`;
+                data[i] = {
+                    title: title,
+                    data: [
+                        { en: `example word ${i}a`, uz: `namuna so'z ${i}a`, cat: "Topic Vocabulary" },
+                        { en: `example word ${i}b`, uz: `namuna so'z ${i}b`, cat: "Topic Vocabulary" },
+                        { en: `phrasal verb ${i}`, uz: `ibora ${i}`, cat: "Phrasal Verbs" },
+                        { en: `formation ${i}`, uz: `yasalish ${i}`, cat: "Word Formation" },
+                        { en: `pattern ${i}`, uz: `qolip ${i}`, cat: "Word Patterns" }
+                    ]
+                };
+            }
+            return data;
+        }
+
+        const database = generateData();
+    </script>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full md:translate-x-0 md:relative md:shadow-none flex flex-col">
+        <div class="p-4 border-b dark:border-gray-700 bg-blue-600 text-white">
+            <h1 class="text-xl font-bold"><i class="fas fa-book-open mr-2"></i>Destination B1</h1>
+        </div>
+        
+        <!-- Global Search -->
+        <div class="p-3 bg-gray-50 dark:bg-gray-900">
+            <div class="relative">
+                <input type="text" id="globalSearch" placeholder="So'z qidirish..." class="w-full pl-9 pr-3 py-2 rounded-lg text-sm border focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <!-- Unit List -->
+        <div id="unitList" class="flex-1 overflow-y-auto no-scrollbar p-2 space-y-1">
+            <!-- Units will be injected here -->
+        </div>
+    </aside>
+
+    <!-- OVERLAY (Mobile Sidebar) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 relative w-full">
+        
+        <!-- Header -->
+        <header class="glass-header h-14 flex items-center justify-between px-4 sticky top-0 z-30">
+            <div class="flex items-center">
+                <button onclick="toggleSidebar()" class="md:hidden mr-3 text-gray-600 dark:text-gray-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div>
+                    <h2 id="currentUnitTitle" class="font-bold text-sm sm:text-lg truncate max-w-[200px]">Select a Unit</h2>
+                    <p id="wordCount" class="text-xs text-gray-500 dark:text-gray-400 hidden">0 so'z</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters (Category Chips) -->
+        <div id="filterContainer" class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar whitespace-nowrap bg-white dark:bg-gray-800 border-b dark:border-gray-700 hidden">
+            <button onclick="filterWords('all')" class="filter-chip active px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">All</button>
+            <button onclick="filterWords('Topic Vocabulary')" class="filter-chip px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">Topic Vocab</button>
+            <button onclick="filterWords('Phrasal Verbs')" class="filter-chip px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">Phrasal Verbs</button>
+            <button onclick="filterWords('Word Formation')" class="filter-chip px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">Formation</button>
+        </div>
+
+        <!-- Content Area -->
+        <div id="contentArea" class="flex-1 overflow-y-auto p-4 pb-24 relative">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                <i class="fas fa-book-reader text-6xl mb-4 text-blue-300"></i>
+                <p>O'rganishni boshlash uchun<br>menyu orqali Unit tanlang.</p>
+            </div>
+
+            <!-- List View -->
+            <div id="listView" class="hidden space-y-3"></div>
+
+            <!-- Flashcards View -->
+            <div id="flashcardsView" class="hidden h-full flex flex-col items-center justify-center">
+               <!-- Content generated by JS -->
+            </div>
+
+            <!-- Match Game View -->
+            <div id="matchView" class="hidden">
+                <div id="matchGrid" class="grid grid-cols-3 gap-3"></div>
+                <div id="matchSuccess" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-gray-900/90 z-10 backdrop-blur-sm">
+                    <i class="fas fa-trophy text-6xl text-yellow-400 mb-4 animate-bounce"></i>
+                    <h3 class="text-2xl font-bold mb-2">Qoyil!</h3>
+                    <p class="text-gray-600 mb-6">Barcha juftliklar topildi.</p>
+                    <button onclick="initMatchGame()" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-lg active:scale-95">Qayta o'ynash</button>
+                </div>
+            </div>
+
+            <!-- Quiz View -->
+            <div id="quizView" class="hidden h-full flex flex-col max-w-md mx-auto">
+                <div class="flex-1 flex flex-col items-center pt-10">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 dark:bg-gray-700">
+                        <div id="quizProgress" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    
+                    <span class="text-sm text-gray-500 mb-2">Tarjimani toping:</span>
+                    <h2 id="quizQuestion" class="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white">...</h2>
+                    
+                    <div class="w-full relative">
+                        <input type="text" id="quizInput" placeholder="Inglizcha tarjimasi..." autocomplete="off"
+                            class="w-full text-center text-xl p-4 rounded-xl border-2 border-gray-300 focus:border-blue-500 outline-none dark:bg-gray-800 dark:border-gray-600">
+                        <div id="quizFeedback" class="mt-2 text-center h-6 font-medium"></div>
+                    </div>
+
+                    <div class="flex gap-3 mt-6 w-full">
+                        <button onclick="useHint()" class="flex-1 py-3 bg-yellow-100 text-yellow-700 rounded-xl font-medium hover:bg-yellow-200 transition">
+                            <i class="fas fa-lightbulb mr-2"></i> Hint
+                        </button>
+                        <button onclick="checkQuizAnswer()" class="flex-[2] py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition active:scale-95">
+                            Tekshirish
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="quizResult" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-gray-900 z-20">
+                    <div class="text-center">
+                        <div class="text-6xl font-bold text-blue-600 mb-2" id="quizScoreDisplay">8/10</div>
+                        <p class="text-gray-500 mb-6">Sizning natijangiz</p>
+                        <button onclick="initQuiz()" class="px-8 py-3 bg-gray-800 text-white rounded-xl font-bold">Qayta ishlash</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results View -->
+            <div id="searchView" class="hidden space-y-3">
+                <h3 class="font-bold text-gray-500 mb-2">Qidiruv natijalari:</h3>
+                <div id="searchResultsList" class="space-y-2"></div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Tabs -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 px-6 py-2 flex justify-between items-center z-40 md:pl-64">
+            <button onclick="switchTab('list')" class="nav-btn active flex flex-col items-center text-gray-400 hover:text-blue-600" data-tab="list">
+                <i class="fas fa-list text-xl mb-1"></i>
+                <span class="text-[10px]">Lug'at</span>
+            </button>
+            <button onclick="switchTab('flashcards')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600" data-tab="flashcards">
+                <i class="fas fa-layer-group text-xl mb-1"></i>
+                <span class="text-[10px]">Cards</span>
+            </button>
+            <button onclick="switchTab('match')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600" data-tab="match">
+                <i class="fas fa-puzzle-piece text-xl mb-1"></i>
+                <span class="text-[10px]">Match</span>
+            </button>
+            <button onclick="switchTab('quiz')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-blue-600" data-tab="quiz">
+                <i class="fas fa-pen-fancy text-xl mb-1"></i>
+                <span class="text-[10px]">Quiz</span>
+            </button>
+        </nav>
+    </main>
+
+    <!-- AI RESULT MODAL -->
+    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh] transform transition-transform duration-300 scale-95" id="aiModalInner">
+            <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                <h3 class="font-bold text-lg flex items-center"><i class="fas fa-robot mr-2"></i>Gemini AI</h3>
+                <button onclick="closeAiModal()" class="text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="aiModalContent" class="p-6 overflow-y-auto text-gray-700 dark:text-gray-300 leading-relaxed text-md min-h-[150px]">
+                <!-- Content injected here -->
+            </div>
+            <div class="p-4 border-t dark:border-gray-700 flex justify-end bg-gray-50 dark:bg-gray-900">
+                <button onclick="closeAiModal()" class="px-5 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-medium">Yopish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-5 py-3 rounded-full text-sm shadow-xl z-50 transition-all duration-300 flex items-center gap-2">
+        <span>Notification text</span>
+    </div>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script>
+        // --- GEMINI API CONFIG ---
+        const apiKey = ""; // The execution environment provides the key at runtime.
+        
+        // --- STATE MANAGEMENT ---
+        const state = {
+            currentUnitId: null,
+            currentTab: 'list',
+            currentFilter: 'all',
+            words: [], // filtered words for current unit
+            flashcardIndex: 0,
+            matchGame: {
+                selected: null,
+                matchesFound: 0,
+                pairs: []
+            },
+            quiz: {
+                questions: [],
+                currentIndex: 0,
+                score: 0,
+                hintsUsed: 0
+            }
+        };
+
+        const tg = window.Telegram.WebApp;
+
+        // --- INIT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            tg.ready();
+            tg.expand();
+            
+            // Theme adaptation
+            if (tg.colorScheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+
+            renderSidebar();
+            
+            // Global Search Listener
+            document.getElementById('globalSearch').addEventListener('input', (e) => handleGlobalSearch(e.target.value));
+            
+            // Quiz Enter key
+            document.getElementById('quizInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') checkQuizAnswer();
+            });
+        });
+
+        // --- AI API HANDLERS ---
+        async function callGeminiAPI(prompt) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API Error');
+                }
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Gemini Error:", error);
+                throw error;
+            }
+        }
+
+        async function generateSentence(word, btnElement) {
+            // UI Loading State
+            const originalIcon = btnElement.innerHTML;
+            btnElement.disabled = true;
+            btnElement.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+            
+            // Find or create result container
+            const parentRow = btnElement.closest('.word-row');
+            let resultDiv = parentRow.querySelector('.ai-result');
+            
+            if (!resultDiv) {
+                resultDiv = document.createElement('div');
+                resultDiv.className = "ai-result mt-3 p-3 bg-indigo-50 dark:bg-gray-700 rounded-lg text-sm text-indigo-900 dark:text-indigo-100 border border-indigo-100 dark:border-gray-600 hidden";
+                parentRow.querySelector('.word-content-area').appendChild(resultDiv);
+            }
+
+            try {
+                const prompt = `Write 1 simple English sentence (B1 level) using the word '${word}'. Make it clear and educational. Do not add translations.`;
+                const text = await callGeminiAPI(prompt);
+                
+                resultDiv.innerHTML = `<strong class="text-indigo-600 dark:text-indigo-300"><i class="fas fa-sparkles mr-1"></i>AI Example:</strong> ${text}`;
+                resultDiv.classList.remove('hidden');
+                
+            } catch (e) {
+                showToast("Internet xatosi yoki AI ishlamayapti");
+            } finally {
+                btnElement.innerHTML = originalIcon;
+                btnElement.disabled = false;
+            }
+        }
+
+        async function generateStory() {
+            const modal = document.getElementById('aiModal');
+            const content = document.getElementById('aiModalContent');
+            const inner = document.getElementById('aiModalInner');
+            
+            // Prepare Words
+            let words = getFilteredWords();
+            if (words.length < 3) {
+                showToast("Hikoya uchun kamida 3 ta so'z kerak");
+                return;
+            }
+            
+            // Pick 5 random words
+            const selected = [...words].sort(() => 0.5 - Math.random()).slice(0, 5).map(w => w.en);
+            
+            // Show Modal Loading
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                inner.classList.remove('scale-95');
+                inner.classList.add('scale-100');
+            }, 10);
+
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-40 space-y-4">
+                    <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                    <p class="text-center text-gray-500 animate-pulse">
+                        Unit so'zlaridan hikoya yozilmoqda...<br>
+                        <span class="text-xs font-bold text-indigo-500 mt-2 block">${selected.join(', ')}</span>
+                    </p>
+                </div>
+            `;
+
+            try {
+                const prompt = `Write a short, funny, and simple story (max 60 words) in English using these words: ${selected.join(', ')}. Highlight the used words in bold (**word**).`;
+                const text = await callGeminiAPI(prompt);
+                
+                // Render with Markdown parsing (simple bolding)
+                const formatted = marked.parse(text);
+                content.innerHTML = formatted;
+            } catch (e) {
+                content.innerHTML = `<div class="text-center text-red-500"><i class="fas fa-exclamation-triangle text-4xl mb-2"></i><br>Xatolik yuz berdi. Qayta urinib ko'ring.</div>`;
+            }
+        }
+
+        function closeAiModal() {
+            const modal = document.getElementById('aiModal');
+            const inner = document.getElementById('aiModalInner');
+            
+            inner.classList.remove('scale-100');
+            inner.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // --- NAVIGATION & UI ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function renderSidebar() {
+            const list = document.getElementById('unitList');
+            list.innerHTML = '';
+            
+            Object.keys(database).forEach(id => {
+                const unit = database[id];
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-3 rounded-lg mb-1 hover:bg-blue-50 dark:hover:bg-gray-700 transition flex justify-between items-center group`;
+                btn.onclick = () => loadUnit(id);
+                btn.innerHTML = `
+                    <span class="font-medium text-sm text-gray-700 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">Unit ${id}: ${unit.title}</span>
+                    <span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">${unit.data.length}</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
+
+        function switchTab(tabName) {
+            state.currentTab = tabName;
+            
+            // Update Tab Icons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('text-blue-600');
+                    btn.classList.remove('text-gray-400');
+                } else {
+                    btn.classList.remove('text-blue-600');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+
+            // Hide all views
+            ['listView', 'flashcardsView', 'matchView', 'quizView', 'searchView', 'welcomeScreen'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            if (!state.currentUnitId && tabName !== 'list') { 
+                // If no unit selected, show welcome (except global search logic handles list view)
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+                return;
+            }
+
+            // Show selected view and init logic
+            if (state.currentUnitId) {
+                const viewId = tabName === 'flashcards' ? 'flashcardsView' : tabName + 'View';
+                const view = document.getElementById(viewId);
+                if (view) view.classList.remove('hidden');
+                
+                if (tabName === 'list') renderList();
+                if (tabName === 'flashcards') initFlashcards();
+                if (tabName === 'match') initMatchGame();
+                if (tabName === 'quiz') initQuiz();
+            } else {
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+            }
+        }
+
+        function loadUnit(id) {
+            state.currentUnitId = id;
+            state.currentFilter = 'all';
+            
+            const unit = database[id];
+            
+            // Update Header
+            document.getElementById('currentUnitTitle').innerText = `Unit ${id}: ${unit.title}`;
+            document.getElementById('wordCount').innerText = `${unit.data.length} so'z`;
+            document.getElementById('wordCount').classList.remove('hidden');
+            document.getElementById('filterContainer').classList.remove('hidden');
+            document.getElementById('welcomeScreen').classList.add('hidden');
+
+            // Reset Filter UI
+            document.querySelectorAll('.filter-chip').forEach(el => {
+                el.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                el.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+                if (el.innerText.toLowerCase() === 'all') {
+                    el.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                    el.classList.remove('bg-gray-100', 'text-gray-600', 'border-gray-200');
+                }
+            });
+
+            // Mobile: close sidebar
+            if (window.innerWidth < 768) toggleSidebar();
+            
+            // Default to List View
+            switchTab('list');
+        }
+
+        function filterWords(category) {
+            state.currentFilter = category;
+            
+            // Update UI Chips
+            document.querySelectorAll('.filter-chip').forEach(el => {
+                // simple fuzzy match for text content vs category key
+                const match = (category === 'all' && el.innerText === 'All') || el.innerText.includes(category.split(' ')[0]);
+                
+                if (match) {
+                    el.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                    el.classList.remove('bg-gray-100', 'text-gray-600', 'border-gray-200');
+                } else {
+                    el.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                    el.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+                }
+            });
+
+            if (state.currentTab === 'list') renderList();
+            if (state.currentTab === 'flashcards') initFlashcards(); // Restart cards with filter
+            // Match and Quiz usually use full unit or random subset, keeping full unit for now to ensure enough data
+        }
+
+        function getFilteredWords() {
+            const allWords = database[state.currentUnitId].data;
+            if (state.currentFilter === 'all') return allWords;
+            return allWords.filter(w => w.cat === state.currentFilter);
+        }
+
+        // --- LIST VIEW ---
+        function renderList() {
+            const container = document.getElementById('listView');
+            container.innerHTML = '';
+            
+            const words = getFilteredWords();
+            
+            // AI Story Button
+            if (words.length > 0) {
+                const storyBtnDiv = document.createElement('div');
+                storyBtnDiv.className = "mb-4";
+                storyBtnDiv.innerHTML = `
+                    <button onclick="generateStory()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl shadow-lg flex items-center justify-center font-bold active:scale-95 transition">
+                        <i class="fas fa-magic mr-2 ai-sparkle"></i> AI Hikoya Yaratish
+                    </button>
+                `;
+                container.appendChild(storyBtnDiv);
+            }
+
+            if (words.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 mt-10">Bu kategoriyada so'zlar yo'q</div>`;
+                return;
+            }
+
+            words.forEach(word => {
+                const el = document.createElement('div');
+                el.className = "word-row bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col";
+                el.innerHTML = `
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex-1 word-content-area">
+                            <div class="flex items-baseline gap-2 flex-wrap">
+                                <h3 class="font-bold text-lg text-blue-900 dark:text-blue-300">${word.en}</h3>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500">${word.cat.substring(0,3)}</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-400 mt-1">${word.uz}</p>
+                        </div>
+                        <div class="flex gap-2 ml-2">
+                             <button onclick="generateSentence('${word.en}', this)" class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-gray-700 hover:bg-indigo-100 text-indigo-600 flex items-center justify-center transition" title="AI Sentence">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                            </button>
+                            <button onclick="playAudio('${word.en}')" class="w-10 h-10 rounded-full bg-blue-50 dark:bg-gray-700 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        // --- FLASHCARDS ---
+        let currentCardWord = null;
+
+        function initFlashcards() {
+            const words = getFilteredWords();
+            const container = document.getElementById('flashcardsView');
+            
+            // Re-render container completely to avoid lost DOM state
+            if (words.length === 0) {
+                container.innerHTML = '<p class="text-center mt-10 text-gray-500">Bu kategoriyada so\'zlar yo\'q</p>';
+                return;
+            }
+
+            // Restore Flashcard DOM Structure
+            container.innerHTML = `
+                <div class="card-container w-full max-w-sm h-64 relative perspective-1000 cursor-pointer" onclick="flipCard()">
+                    <div id="flashcardInner" class="w-full h-full relative transform-style-3d transition-all duration-500 shadow-xl rounded-2xl">
+                        <!-- Front -->
+                        <div class="absolute w-full h-full backface-hidden bg-white dark:bg-gray-800 rounded-2xl flex flex-col items-center justify-center p-6 border-2 border-blue-100 dark:border-gray-700">
+                            <span class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2" id="fc-cat-front">Category</span>
+                            <h3 class="text-3xl font-bold text-center select-none" id="fc-text-front">Front</h3>
+                            <button onclick="event.stopPropagation(); playAudio(currentCardWord.en)" class="mt-4 w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-blue-600 text-white rounded-2xl flex flex-col items-center justify-center p-6 shadow-xl">
+                             <span class="text-xs font-bold text-blue-200 uppercase tracking-widest mb-2" id="fc-cat-back">Category</span>
+                            <h3 class="text-3xl font-bold text-center select-none" id="fc-text-back">Back</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6 mt-8">
+                    <button onclick="prevCard()" class="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-md flex items-center justify-center active:scale-95 transition text-gray-600 dark:text-gray-300">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <span id="fc-counter" class="font-mono text-sm text-gray-500">1 / 20</span>
+                    <button onclick="nextCard()" class="w-12 h-12 rounded-full bg-blue-600 text-white shadow-md flex items-center justify-center active:scale-95 transition shadow-blue-200">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+
+            state.words = words;
+            state.flashcardIndex = 0;
+            renderFlashcard();
+        }
+
+        function renderFlashcard() {
+            const word = state.words[state.flashcardIndex];
+            currentCardWord = word;
+            
+            const card = document.querySelector('.card-container');
+            card.classList.remove('flipped'); // Reset flip
+            
+            // Random start side logic (50% chance to start with UZ)
+            const startUz = Math.random() > 0.5;
+            
+            const frontText = document.getElementById('fc-text-front');
+            const backText = document.getElementById('fc-text-back');
+            const frontCat = document.getElementById('fc-cat-front');
+            const backCat = document.getElementById('fc-cat-back');
+
+            if (startUz) {
+                frontText.innerText = word.uz;
+                frontCat.innerText = "Uzbek";
+                backText.innerText = word.en;
+                backCat.innerText = word.cat;
+            } else {
+                frontText.innerText = word.en;
+                frontCat.innerText = word.cat;
+                backText.innerText = word.uz;
+                backCat.innerText = "Uzbek";
+            }
+
+            document.getElementById('fc-counter').innerText = `${state.flashcardIndex + 1} / ${state.words.length}`;
+        }
+
+        function flipCard() {
+            document.querySelector('.card-container').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (state.flashcardIndex < state.words.length - 1) {
+                state.flashcardIndex++;
+                renderFlashcard();
+            } else {
+                showToast("Bu oxirgi kartochka");
+            }
+        }
+
+        function prevCard() {
+            if (state.flashcardIndex > 0) {
+                state.flashcardIndex--;
+                renderFlashcard();
+            }
+        }
+
+        // --- MATCH GAME ---
+        function initMatchGame() {
+            const words = database[state.currentUnitId].data;
+            // Select 6 random words
+            const shuffled = [...words].sort(() => 0.5 - Math.random()).slice(0, 6);
+            
+            let tiles = [];
+            shuffled.forEach((w, idx) => {
+                tiles.push({ id: idx, text: w.en, type: 'en', pairId: idx });
+                tiles.push({ id: idx, text: w.uz, type: 'uz', pairId: idx });
+            });
+            
+            // Shuffle tiles
+            tiles.sort(() => 0.5 - Math.random());
+            
+            state.matchGame.pairs = tiles;
+            state.matchGame.selected = null;
+            state.matchGame.matchesFound = 0;
+            
+            const grid = document.getElementById('matchGrid');
+            grid.innerHTML = '';
+            document.getElementById('matchSuccess').classList.add('hidden');
+            
+            tiles.forEach((tile, index) => {
+                const btn = document.createElement('button');
+                btn.className = "match-tile aspect-square flex items-center justify-center p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-lg text-xs sm:text-sm font-medium shadow-sm active:scale-95 transition select-none";
+                btn.innerText = tile.text;
+                btn.dataset.index = index;
+                btn.onclick = () => handleMatchClick(btn, tile);
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleMatchClick(btn, tile) {
+            // Ignore if already matched or clicking same tile
+            if (btn.classList.contains('matched') || btn.classList.contains('bg-blue-500')) return;
+
+            // Highlight
+            btn.classList.add('bg-blue-500', 'text-white', 'border-blue-600');
+            btn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-800');
+
+            if (!state.matchGame.selected) {
+                // First selection
+                state.matchGame.selected = { btn, tile };
+            } else {
+                // Second selection
+                const prev = state.matchGame.selected;
+                
+                // Check match
+                if (prev.tile.pairId === tile.pairId && prev.tile.type !== tile.type) {
+                    // Match!
+                    setTimeout(() => {
+                        btn.classList.add('matched');
+                        prev.btn.classList.add('matched');
+                        state.matchGame.matchesFound++;
+                        checkMatchWin();
+                    }, 300);
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        // Shake animation
+                        btn.classList.add('shake');
+                        prev.btn.classList.add('shake');
+                        
+                        // Reset colors
+                        setTimeout(() => {
+                            [btn, prev.btn].forEach(b => {
+                                b.classList.remove('bg-blue-500', 'text-white', 'border-blue-600', 'shake');
+                                b.classList.add('bg-white', 'dark:bg-gray-800');
+                            });
+                        }, 400);
+                    }, 300);
+                }
+                state.matchGame.selected = null;
+            }
+        }
+
+        function checkMatchWin() {
+            if (state.matchGame.matchesFound === 6) {
+                setTimeout(() => {
+                    document.getElementById('matchSuccess').classList.remove('hidden');
+                }, 500);
+            }
+        }
+
+        // --- QUIZ MODE ---
+        function initQuiz() {
+            const words = database[state.currentUnitId].data;
+            // Get 10 random words
+            state.quiz.questions = [...words].sort(() => 0.5 - Math.random()).slice(0, 10);
+            state.quiz.currentIndex = 0;
+            state.quiz.score = 0;
+            
+            document.getElementById('quizResult').classList.add('hidden');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (state.quiz.currentIndex >= state.quiz.questions.length) {
+                showQuizResult();
+                return;
+            }
+
+            const q = state.quiz.questions[state.quiz.currentIndex];
+            state.quiz.hintsUsed = 0;
+
+            document.getElementById('quizQuestion').innerText = q.uz;
+            const input = document.getElementById('quizInput');
+            input.value = '';
+            input.className = "w-full text-center text-xl p-4 rounded-xl border-2 border-gray-300 focus:border-blue-500 outline-none dark:bg-gray-800 dark:border-gray-600";
+            
+            document.getElementById('quizFeedback').innerText = '';
+            
+            // Progress Bar
+            const pct = (state.quiz.currentIndex / state.quiz.questions.length) * 100;
+            document.getElementById('quizProgress').style.width = `${pct}%`;
+        }
+
+        function checkQuizAnswer() {
+            const input = document.getElementById('quizInput');
+            const currentWord = state.quiz.questions[state.quiz.currentIndex].en;
+            const userAns = input.value.trim().toLowerCase();
+            const correctAns = currentWord.toLowerCase();
+
+            if (userAns === correctAns) {
+                // Correct
+                input.classList.add('border-green-500', 'text-green-600');
+                state.quiz.score++;
+                playAudio(currentWord); // Optional reward sound logic
+                setTimeout(() => {
+                    state.quiz.currentIndex++;
+                    renderQuizQuestion();
+                }, 1000);
+            } else {
+                // Wrong
+                input.classList.add('border-red-500', 'text-red-600');
+                // Show Correct Answer
+                document.getElementById('quizFeedback').innerText = currentWord;
+                document.getElementById('quizFeedback').className = "mt-2 text-center h-6 font-bold text-red-500";
+                
+                setTimeout(() => {
+                    state.quiz.currentIndex++;
+                    renderQuizQuestion();
+                }, 2000);
+            }
+        }
+
+        function useHint() {
+            const currentWord = state.quiz.questions[state.quiz.currentIndex].en;
+            const input = document.getElementById('quizInput');
+            
+            // Simple hint: reveal first N letters based on clicks
+            state.quiz.hintsUsed++;
+            input.value = currentWord.substring(0, state.quiz.hintsUsed);
+            input.focus();
+        }
+
+        function showQuizResult() {
+            document.getElementById('quizResult').classList.remove('hidden');
+            document.getElementById('quizScoreDisplay').innerText = `${state.quiz.score}/10`;
+            document.getElementById('quizProgress').style.width = `100%`;
+        }
+
+        // --- GLOBAL SEARCH ---
+        function handleGlobalSearch(query) {
+            query = query.toLowerCase();
+            const resultsContainer = document.getElementById('searchResultsList');
+            const searchView = document.getElementById('searchView');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            
+            if (query.length < 2) {
+                searchView.classList.add('hidden');
+                // If we are not inside a unit, show welcome. If inside unit, keep unit view hidden by this overlay
+                if(!state.currentUnitId) welcomeScreen.classList.remove('hidden');
+                return;
+            }
+
+            // If searching, hide whatever is in main area and show search results
+            document.querySelectorAll('#contentArea > div').forEach(div => div.classList.add('hidden'));
+            searchView.classList.remove('hidden');
+
+            resultsContainer.innerHTML = '';
+            let count = 0;
+
+            for (const [unitId, unitData] of Object.entries(database)) {
+                unitData.data.forEach(word => {
+                    if (word.en.toLowerCase().includes(query) || word.uz.toLowerCase().includes(query)) {
+                        count++;
+                        const el = document.createElement('div');
+                        el.className = "bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700";
+                        el.innerHTML = `
+                            <div class="flex justify-between">
+                                <span class="font-bold text-blue-600">${word.en}</span>
+                                <span class="text-xs text-gray-400">Unit ${unitId}</span>
+                            </div>
+                            <div class="text-gray-700 dark:text-gray-300 text-sm">${word.uz}</div>
+                        `;
+                        // Clicking result could go to that unit, but for now just showing it is enough
+                        el.onclick = () => {
+                            loadUnit(unitId);
+                            document.getElementById('globalSearch').value = '';
+                            searchView.classList.add('hidden');
+                        };
+                        resultsContainer.appendChild(el);
+                    }
+                });
+                if (count > 20) return; // Limit results for performance
+            }
+
+            if (count === 0) {
+                resultsContainer.innerHTML = '<div class="text-gray-400 text-center">Natija topilmadi</div>';
+            }
+        }
+
+        // --- AUDIO SYSTEM (Robust Fallback) ---
+        function playAudio(text) {
+            if (!text) return;
+
+            // 1. Try Browser Native SpeechSynthesis
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-GB'; // British English for Destination B1 preference
+                utterance.rate = 0.9;
+                
+                // Android Chrome sometimes has issues if not triggered by user gesture directly or if voices aren't loaded.
+                // We try-catch the execution.
+                try {
+                    window.speechSynthesis.cancel(); // Stop previous
+                    window.speechSynthesis.speak(utterance);
+                    return; 
+                } catch (e) {
+                    console.log("Native TTS failed, trying fallback");
+                }
+            }
+
+            // 2. Fallback: Google Translate TTS API (Unofficial but works for simple GETs)
+            // Note: This relies on network.
+            const audio = new Audio();
+            audio.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`;
+            audio.play().catch(e => {
+                showToast("Audio o'qish imkonsiz");
+            });
+        }
+
+        // --- UTILS ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+    </script>
+</body>
+</html>
