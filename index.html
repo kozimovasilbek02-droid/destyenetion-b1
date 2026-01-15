@@ -660,18 +660,29 @@
         function playAudio(text) {
             if (!text) return;
 
-            // 1. Google Translate TTS (Oddiy lekin ravon va tiniq)
-            // Telegram Web App (Android/iOS) da bu eng barqaror va sifatli yechim
-            const audio = new Audio();
-            audio.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`;
+            // 1. Harakat: Youdao TTS (Sifatli va ishonchli)
+            // Google TTS ba'zida bloklaydi, shuning uchun Youdao ishlatamiz (type=2 -> US English)
+            const audio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`);
             
-            // Promise bilan xatolikni ushlab qolamiz (agar internet bo'lmasa)
             const playPromise = audio.play();
 
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.log("Google TTS ishlamadi, Native ga o'tilmoqda:", error);
-                    // 2. Fallback: Browser Native (Agar Google TTS ishlamasa)
+                    console.error("Online audio xatosi:", error);
+                    // 2. Harakat: Google TTS (Zaxira)
+                    tryGoogleFallback(text);
+                });
+            }
+        }
+
+        function tryGoogleFallback(text) {
+             const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`);
+             const playPromise = audio.play();
+             
+             if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Google audio xatosi:", error);
+                    // 3. Harakat: Native (Telefon ovozi)
                     playNativeAudio(text);
                 });
             }
@@ -703,7 +714,7 @@
                     speak();
                 }
             } else {
-                showToast("Audio qo'llab quvvatlanmaydi");
+                showToast("Audio qurilmada qo'llab quvvatlanmaydi");
             }
         }
 
